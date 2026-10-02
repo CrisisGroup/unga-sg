@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640">
+  <rect width="960" height="640" fill="#19252f"/>
+  <path d="M0 0L960 640M960 0L0 640" stroke="#2b3c49"/>
+  <rect x="260" y="260" width="440" height="120" fill="#19252f"/>
+  <text x="480" y="314" fill="#a9bbc8" font-family="Arial, sans-serif" font-size="28" text-anchor="middle">Detail image</text>
+  <text x="480" y="350" fill="#a9bbc8" font-family="Arial, sans-serif" font-size="16" letter-spacing="3" text-anchor="middle">PLACEHOLDER · 3:2</text>
+</svg>

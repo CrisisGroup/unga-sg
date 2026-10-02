@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="810" viewBox="0 0 1440 810">
+  <rect width="1440" height="810" fill="#19252f"/>
+  <path d="M0 0L1440 810M1440 0L0 810" stroke="#2b3c49"/>
+  <rect x="480" y="345" width="480" height="120" fill="#19252f"/>
+  <text x="720" y="399" fill="#a9bbc8" font-family="Arial, sans-serif" font-size="28" text-anchor="middle">Supporting image</text>
+  <text x="720" y="435" fill="#a9bbc8" font-family="Arial, sans-serif" font-size="16" letter-spacing="3" text-anchor="middle">PLACEHOLDER · 16:9</text>
+</svg>

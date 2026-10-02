@@ -1,0 +1,98 @@
+/* Shared editorial tokens and typography from minerals. */
+:root {
+  --paper: #0f151b;
+  --ink: #fff;
+  --muted: rgba(255, 255, 255, .72);
+  --heading: #c0c0c0;
+  --accent: #9ecacb;
+  --copy-width: 720px;
+  --wide-width: 1180px;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --font-serif: "PT Serif", Georgia, "Times New Roman", serif;
+  --font-sans: "franklin-gothic-urw", Arial, sans-serif;
+  --font-sans-cond: "franklin-gothic-urw-cond", "franklin-gothic-urw", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-serif); }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-underline-offset: .2em; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+h1, h2, h3 { font-family: var(--font-sans-cond); font-weight: 600; }
+h2 { margin: 0 0 1.2rem; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; }
+h3 { margin: 0 0 1rem; font-size: 1.8rem; line-height: 1.1; }
+p { margin: 0 0 1.4rem; font-size: 1.3rem; line-height: 1.7; }
+.eyebrow { margin-bottom: 1rem; font: .85rem/1.4 var(--font-sans); letter-spacing: .13em; text-transform: uppercase; color: var(--muted); }
+.skip-link { position: absolute; top: 1rem; left: 1rem; z-index: 10; padding: 1rem; background: var(--paper); transform: translateY(-200%); }
+.skip-link:focus { transform: none; }
+
+/* A single static header photograph, with no scroll animation. */
+.hero__image { position: relative; }
+.hero__image > img { width: 100%; height: 66svh; min-height: 340px; max-height: 800px; object-fit: cover; }
+.hero__image::after { position: absolute; inset: 50% 0 0; content: ""; background: linear-gradient(transparent, var(--paper)); pointer-events: none; }
+.hero__brand { position: absolute; z-index: 1; top: clamp(1.25rem, 3vw, 2.5rem); left: clamp(1.25rem, 3vw, 2.5rem); width: clamp(110px, 15vw, 200px); }
+.hero__copy { display: flex; flex-direction: column; align-items: center; width: min(760px, calc(100% - 2 * var(--gutter))); margin: auto; padding: 3rem 0 4rem; text-align: center; }
+h1 { margin: 0; color: var(--heading); font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: .96; }
+.hero__subhed { margin: 2rem 0 1.45rem; font-size: clamp(1.1rem, 2.4vw, 1.5rem); font-style: italic; line-height: 1.4; }
+.hero__divider { width: 8rem; margin: 0; border: 0; border-top: 1px solid rgba(255,255,255,.22); }
+.hero__byline, .hero__dateline { font-family: var(--font-sans-cond); font-size: clamp(1rem, 2.2vw, 1.26rem); }
+.hero__byline { margin: 1rem 0 .1rem; }
+.hero__byline span, .hero__dateline { opacity: .65; }
+.hero__byline strong { letter-spacing: .09rem; }
+.hero__scroll-cue { display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border: 1px solid rgba(255,255,255,.38); border-radius: 50%; text-decoration: none; }
+.chapter-copy { width: min(var(--copy-width), 100%); padding: 0 var(--gutter); margin: 4rem auto; }
+.story-media { width: min(var(--wide-width), calc(100% - 2 * var(--gutter))); margin: 4rem auto; }
+.inline-media { margin: 2.5rem 0; }
+.story-media img, .inline-media img { width: 100%; }
+figcaption { margin-top: .8rem; font: .95rem/1.5 var(--font-sans); color: var(--muted); }
+
+/* Without JavaScript, the illustration and all narrative remain in normal flow. */
+.scrolly { width: min(1440px, 100%); margin: 5rem auto; padding: 0 var(--gutter); }
+.scrolly__graphic { margin: 0; padding: 2rem 0; }
+.graphic__heading h2 { margin: 0; }
+.graphic { display: block; width: 100%; max-height: 60svh; }
+.graphic__guides { color: #fff; opacity: .1; }
+.graphic__center { color: var(--accent); }
+.graphic text { fill: var(--paper); font: 18px var(--font-sans); }
+.graphic__focus, .graphic__other { color: #788d9f; transition: color 450ms, opacity 450ms; }
+.graphic__connections { color: var(--accent); opacity: 0; transition: opacity 450ms; }
+[data-state="focus"] .graphic__focus { color: var(--accent); }
+[data-state="focus"] .graphic__other { opacity: .18; }
+[data-state="connections"] .graphic__connections { opacity: .8; }
+[data-state="connections"] .graphic__focus, [data-state="connections"] .graphic__other { color: var(--accent); }
+.scrolly__graphic figcaption { display: flex; gap: 1.25rem; border-top: 1px solid #ffffff26; padding-top: 1rem; }
+[data-graphic-count] { color: var(--accent); white-space: nowrap; }
+.step__copy { padding: 1.6rem; background: #182129; border-left: 2px solid #ffffff33; }
+.step__copy p:last-child { margin: 0; }
+.step { margin: 2rem 0; }
+.step.is-active .step__copy { border-color: var(--accent); }
+.scrolly.is-enhanced { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+.is-enhanced .scrolly__graphic { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+.is-enhanced .step { min-height: 100svh; margin: 0; display: flex; align-items: center; }
+.step__copy p { font-size: 1.15rem; }
+
+/* Credits preserve the minerals footer design; no sub-page navigation. */
+.credits { background: var(--paper); width: min(var(--copy-width), 100%); margin: 0 auto; padding: 0 var(--gutter) 3rem; }
+.credits__inner { width: 100%; text-align: left; }
+.credits__label { margin: 0 0 .75rem; opacity: .75; font-family: var(--font-sans-cond); font-size: .95rem; letter-spacing: .14em; text-transform: uppercase; }
+.credits__text { margin: 0; opacity: .85; font-family: var(--font-sans); font-size: 1.2rem; letter-spacing: .02rem; line-height: 1.6; }
+.credits__text strong { font-weight: 700; }
+.credits__text__author { font-family: var(--font-sans); font-weight: 700; }
+.credits__spaced { margin-top: 1.5rem; }
+.credits__copyright { margin-top: 1.5rem; opacity: .85; font-family: var(--font-sans); font-size: 1.2rem; }
+
+@media (max-width: 700px) {
+  .hero__image > img { height: 50svh; min-height: 280px; }
+  .scrolly.is-enhanced { display: block; }
+  .is-enhanced .scrolly__graphic { z-index: 1; height: 54svh; padding: 1rem 0; background: var(--paper); }
+  .graphic__heading .eyebrow { margin-bottom: .4rem; font-size: .7rem; }
+  .graphic__heading h2 { font-size: 1.5rem; }
+  .graphic { min-height: 0; flex: 1; }
+  .scrolly__graphic figcaption { margin-top: .2rem; padding-top: .5rem; font-size: .8rem; }
+  .is-enhanced .step { min-height: 85svh; align-items: flex-start; padding-top: 4svh; }
+  .step__copy { width: 100%; padding: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; }
+}
