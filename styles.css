@@ -41,9 +41,6 @@ h1 { margin: 0; color: var(--heading); font-size: clamp(2.6rem, 6.4vw, 5rem); li
 .hero__byline strong { letter-spacing: .09rem; }
 .hero__scroll-cue { display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border: 1px solid rgba(255,255,255,.38); border-radius: 50%; text-decoration: none; }
 .chapter-copy { width: min(var(--copy-width), 100%); padding: 0 var(--gutter); margin: 4rem auto; }
-.story-media { width: min(var(--wide-width), calc(100% - 2 * var(--gutter))); margin: 4rem auto; }
-.inline-media { margin: 2.5rem 0; }
-.story-media img, .inline-media img { width: 100%; }
 figcaption { margin-top: .8rem; font: .95rem/1.5 var(--font-sans); color: var(--muted); }
 
 /* Without JavaScript, the illustration and all narrative remain in normal flow. */
@@ -71,15 +68,21 @@ figcaption { margin-top: .8rem; font: .95rem/1.5 var(--font-sans); color: var(--
 .is-enhanced .step { min-height: 100svh; margin: 0; display: flex; align-items: center; }
 .step__copy p { font-size: 1.15rem; }
 
-/* Credits preserve the minerals footer design; no sub-page navigation. */
-.credits { background: var(--paper); width: min(var(--copy-width), 100%); margin: 0 auto; padding: 0 var(--gutter) 3rem; }
-.credits__inner { width: 100%; text-align: left; }
-.credits__label { margin: 0 0 .75rem; opacity: .75; font-family: var(--font-sans-cond); font-size: .95rem; letter-spacing: .14em; text-transform: uppercase; }
-.credits__text { margin: 0; opacity: .85; font-family: var(--font-sans); font-size: 1.2rem; letter-spacing: .02rem; line-height: 1.6; }
+/* The PDF's closing section: original photograph, white paper and narrow copy. */
+.closing { background: #fff; color: #000; padding: 84px var(--gutter) 0; font-family: "pt-serif", var(--font-serif); }
+.closing__photo { width: min(912px, 100%); margin: 0 auto 88px; }
+.closing__photo img { width: 100%; }
+.closing__copy, .credits__inner { width: min(720px, 100%); margin: 0 auto; }
+.closing__copy h2 { margin: 0; font-size: 22px; line-height: 33px; letter-spacing: .1em; text-transform: uppercase; }
+.closing__copy p { margin: 0; font-size: 22px; line-height: 33px; }
+.closing a:focus-visible { outline-color: #24787a; }
+.credits { background: #fff; color: #414141; padding: 84px var(--gutter) 196px; }
+.credits__inner { text-align: left; }
+.credits__label { font-family: var(--font-sans-cond); font-size: 20px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+.credits__text { margin: 0; font-family: var(--font-sans); font-size: 24px; line-height: 29px; }
 .credits__text strong { font-weight: 700; }
-.credits__text__author { font-family: var(--font-sans); font-weight: 700; }
-.credits__spaced { margin-top: 1.5rem; }
-.credits__copyright { margin-top: 1.5rem; opacity: .85; font-family: var(--font-sans); font-size: 1.2rem; }
+.credits__spaced { margin-top: 29px; }
+.credits__copyright { margin: 29px 0 0; font-family: var(--font-sans); font-size: 24px; line-height: 29px; }
 
 @media (max-width: 700px) {
   .hero__image > img { height: 50svh; min-height: 280px; }
@@ -91,6 +94,13 @@ figcaption { margin-top: .8rem; font: .95rem/1.5 var(--font-sans); color: var(--
   .scrolly__graphic figcaption { margin-top: .2rem; padding-top: .5rem; font-size: .8rem; }
   .is-enhanced .step { min-height: 85svh; align-items: flex-start; padding-top: 4svh; }
   .step__copy { width: 100%; padding: 1.25rem; }
+  .closing { padding-top: 3rem; }
+  .closing__photo { margin-bottom: 3rem; }
+  .closing__copy p { font-size: 1.125rem; line-height: 1.5; }
+  .closing__copy h2 { font-size: 1.125rem; line-height: 1.5; }
+  .credits { padding-top: 3rem; padding-bottom: 5rem; }
+  .credits__text, .credits__copyright { font-size: 1.125rem; line-height: 1.4; }
+  .credits__label { font-size: 1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
