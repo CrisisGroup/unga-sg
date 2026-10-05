@@ -24,11 +24,11 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .skip-link:focus { transform: none; }
 
 /* Keep the map edge-to-edge and anchored at the bottom when the header crops it. */
-.hero__image { position: relative; width: 100%; aspect-ratio: 4096 / 2731; max-height: 45svh; overflow: hidden; }
-.hero__image > img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.hero__image { position: relative; width: 100%; aspect-ratio: 1384 / 562; max-height: 100svh; overflow: hidden; }
+.hero__image > img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; }
 .hero__image::after { content: ""; position: absolute; inset: auto 0 0; height: 25%; background: linear-gradient(to bottom, transparent, var(--paper)); pointer-events: none; }
 .hero__brand { position: absolute; top: clamp(16px, 3vw, 32px); left: clamp(16px, 3vw, 32px); width: clamp(72px, 16%, 140px); }
-.hero__copy { width: min(68.75rem, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 10rem; font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
+.hero__copy { width: min(68.75rem, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: clamp(1.5rem, 4svh, 3rem); font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
 /* Match minerals' main headline, including its 760px text column. */
 h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(--font-sans-cond); font-weight: 600; font-style: normal; font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: .96; letter-spacing: 0; text-align: center; text-transform: none; }
 .hero__subhed { margin: 2.667em auto 1.333em; max-width: 36.667em; font-size: 1em; font-style: italic; line-height: 1.333; }
@@ -140,6 +140,9 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .hero__image { max-height: 35svh; }
+  .hero__brand { top: 12px; left: 16px; width: min(72px, 24svh); }
+  .hero__copy { padding-top: 1rem; }
+  h1 { max-width: 24ch; font-size: clamp(2rem, 8svh, 3rem); line-height: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
