@@ -25,10 +25,10 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .skip-link:focus { transform: none; }
 
 /* Keep the hero artwork above the centred headline, as in the revised wireframe. */
-.hero__image { position: relative; height: clamp(360px, 65.5vw, 944px); overflow: hidden; }
-.hero__image > img { position: absolute; width: 169.4%; max-width: none; height: 172.3%; left: -37.15%; top: -43.1%; object-fit: cover; }
-.hero__brand { position: absolute; top: clamp(24px, 6vw, 86px); left: clamp(24px, 6vw, 86px); width: clamp(110px, 17vw, 245px); }
-.hero__copy { width: min(920px, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 128px; text-align: center; }
+.hero__image { position: relative; overflow: hidden; }
+.hero__image > img { width: 100%; height: auto; max-height: min(65svh, 640px); object-fit: cover; object-position: center 40%; }
+.hero__brand { position: absolute; top: clamp(20px, 3vw, 48px); left: clamp(20px, 3vw, 48px); width: clamp(88px, 13vw, 180px); }
+.hero__copy { width: min(920px, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 64px; text-align: center; }
 h1 { margin: 0; font-family: "franklin-gothic-urw-comp", var(--font-sans-cond); font-size: clamp(2.6rem, 6.95vw, 6.25rem); line-height: .96; }
 h1 span { display: block; }
 .hero__subhed { margin: 64px auto 32px; max-width: 880px; font-size: 24px; font-style: italic; line-height: 32px; }
@@ -48,7 +48,9 @@ h1 span { display: block; }
 .map-live { visibility: hidden; }
 .map-world.mapboxgl-map { font-family: var(--font-sans); }
 /* Animate only the halo: Mapbox owns the marker's positioning transform. */
-.map-location-dot { width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; background: #202a32; box-shadow: 0 0 0 1px rgb(32 42 50 / 35%); pointer-events: none; }
+.map-location-marker { width: 12px; height: 12px; pointer-events: none; }
+.map-location-dot { position: relative; width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; background: #202a32; box-shadow: 0 0 0 1px rgb(32 42 50 / 35%); pointer-events: none; opacity: 0; transition: opacity 650ms ease-in-out; }
+.map-location-dot.is-visible { opacity: 1; }
 .map-location-dot::before { content: ""; position: absolute; inset: -2px; border: 1px solid #202a32; border-radius: 50%; background: rgb(32 42 50 / 25%); animation: map-location-pulse 1.8s ease-out infinite; }
 @keyframes map-location-pulse {
   0% { transform: scale(1); opacity: .8; }
@@ -58,8 +60,9 @@ h1 span { display: block; }
   .map-location-dot::before { animation: none; opacity: 0; }
 }
 .map-status { position: absolute; left: 3%; bottom: 12px; max-width: 90%; padding: 6px 10px; background: #fff; color: #555; font: 14px/1.4 var(--font-sans); }
-.map-backdrop { position: absolute; inset: 0; background: url("media/un-background.png") center / cover no-repeat; opacity: 0; transition: opacity 450ms; }
-[data-theme="reform"] .map-backdrop { opacity: 1; }
+/* Soften the footage against the paper background to keep the map and copy prominent. */
+.map-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; filter: saturate(.45) contrast(.85); opacity: 0; transition: opacity 450ms; }
+[data-theme="reform"] .map-backdrop { opacity: .3; }
 .scrolly__steps { position: relative; max-width: 1600px; margin: 0 auto; }
 .step { padding: 2rem var(--gutter); }
 .step__copy { width: min(558px, 100%); margin: auto; padding: 32px 42px; background: #fff; border: 1px solid #68cece; }
@@ -104,7 +107,7 @@ h1 span { display: block; }
   .is-enhanced .step__copy { width: 50%; padding: 24px; }
 }
 @media (max-width: 700px) {
-  .hero__image { height: 52svh; min-height: 320px; max-height: 520px; }
+  .hero__image > img { max-height: none; }
   .hero__copy { padding-top: 48px; }
   h1 { font-size: clamp(32px, 9vw, 50px); }
   .hero__subhed { font-size: 18px; line-height: 1.5; margin: 32px auto 24px; }

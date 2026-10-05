@@ -12,7 +12,7 @@
   const stepTransitionDuration = 650;
   const layerOpacities = new Map();
   let map;
-  let locationMarker;
+  const locationMarkers = new Map();
   let styleReady = false;
   let ready = false;
   let accessFailed = false;
@@ -41,20 +41,31 @@
       map.setPaintProperty(id, 'fill-opacity-transition', { duration, delay: 0 });
       map.setPaintProperty(id, 'fill-opacity', id === selected ? opacity : 0);
     });
-    const location = config.locations?.[scene.id];
-    if (location) {
-      if (!locationMarker) {
-        const dot = document.createElement('div');
-        dot.className = 'map-location-dot';
-        // The location is described in the map caption instead of a focusable control.
-        dot.setAttribute('aria-hidden', 'true');
-        locationMarker = new window.mapboxgl.Marker({ element: dot, anchor: 'center' });
-      }
-      locationMarker.setLngLat(location.coordinates).addTo(map);
-    } else {
-      locationMarker?.remove();
-    }
+    updateLocationMarkers();
     figure.dataset.activeLayer = selected || '';
+  }
+
+  function updateLocationMarkers() {
+    const location = config.locations?.[scene.id];
+    const key = location?.coordinates.join(',');
+    if (location && !locationMarkers.has(key)) {
+      const element = document.createElement('div');
+      element.className = 'map-location-marker';
+      // Mapbox controls the wrapper; the inner dot owns its opacity transition.
+      element.setAttribute('aria-hidden', 'true');
+      const dot = document.createElement('div');
+      dot.className = 'map-location-dot';
+      element.append(dot);
+      const marker = new window.mapboxgl.Marker({ element, anchor: 'center' })
+        .setLngLat(location.coordinates).addTo(map);
+      locationMarkers.set(key, { marker, dot });
+      // Establish the transparent starting state before fading a new dot in.
+      dot.getBoundingClientRect();
+    }
+    // Retain markers at their own locations so interrupted fades can reverse.
+    locationMarkers.forEach(({ dot }, markerKey) => {
+      dot.classList.toggle('is-visible', ready && markerKey === key);
+    });
   }
 
   function selectScene(next) {
@@ -97,6 +108,7 @@
     status.hidden = true;
     container.style.visibility = 'visible';
     figure.dataset.mapStatus = 'ready';
+    updateLocationMarkers();
   }
 
   function initialise() {

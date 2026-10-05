@@ -10,7 +10,7 @@ window.UNGA_MAP_CONFIG = {
     "iran-hormuz": { "coordinates": [56.3, 26.6], "label": "Strait of Hormuz" },
     "ukraine": { "coordinates": [31.2, 48.4], "label": "Ukraine" },
     "sudan": { "coordinates": [30.2, 15.5], "label": "Sudan" },
-    "un-reform": null,
+    "un-reform": { "coordinates": [-73.968, 40.749], "label": "UN headquarters, New York" },
     "next-sg": { "coordinates": [-73.968, 40.749], "label": "UN headquarters, New York" }
   },
   "layers": {

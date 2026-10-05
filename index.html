@@ -40,7 +40,9 @@
     <!-- One persistent Mapbox map, driven by the narrative steps. -->
     <section class="scrolly" aria-label="Peace and security issues at the General Assembly" data-scrolly>
       <figure class="scrolly__graphic" data-scene="overview" data-theme="conflict">
-        <div class="map-backdrop" aria-hidden="true"></div>
+        <video class="map-backdrop" autoplay muted loop playsinline poster="media/un-background.png" aria-hidden="true">
+          <source src="media/hr_united_nations.mp4" type="video/mp4" />
+        </video>
         <div class="map-stage">
           <div id="story-map" class="map-world map-live" aria-label="World map of General Assembly speeches" aria-describedby="map-description"></div>
           <div class="map-world" data-map-fallback>
