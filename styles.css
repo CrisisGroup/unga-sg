@@ -28,7 +28,7 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .hero__image > img { width: 100%; height: auto; }
 .hero__image::after { content: ""; position: absolute; inset: auto 0 0; height: 25%; background: linear-gradient(to bottom, transparent, var(--paper)); pointer-events: none; }
 .hero__brand { position: absolute; top: clamp(16px, 3vw, 32px); left: clamp(16px, 3vw, 32px); width: clamp(72px, 16%, 140px); }
-.hero__copy { width: min(68.75rem, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: clamp(1rem, 4svh, 3rem); font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
+.hero__copy { width: min(68.75rem, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 10rem; font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
 /* Match minerals' main headline, including its 760px text column. */
 h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(--font-sans-cond); font-weight: 600; font-style: normal; font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: .96; letter-spacing: 0; text-align: center; text-transform: none; }
 .hero__subhed { margin: 2.667em auto 1.333em; max-width: 36.667em; font-size: 1em; font-style: italic; line-height: 1.333; }
@@ -93,9 +93,11 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .closing__copy, .credits__inner { width: min(var(--copy-width), 100%); margin: 0 auto; }
 .closing__copy h2 { margin: 0; font-size: 22px; line-height: 33px; letter-spacing: .1em; text-transform: uppercase; }
 .credits { background: #fff; color: #414141; padding: 116px var(--gutter) 180px; }
-.credits__label { font-family: var(--font-sans-cond); font-size: 20px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.credits__text, .credits__copyright { font: 24px/29px var(--font-sans); }
-.credits__text strong { font-weight: 500; }
+.credits__label { opacity: .75; font-family: var(--font-sans-cond); font-size: .95rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.credits__text, .credits__copyright { opacity: .85; font: 1.2rem/1.6 var(--font-sans); }
+.credits__text { letter-spacing: .02rem; }
+.credits__copyright { line-height: 1.7; }
+.credits__text strong { font-weight: 700; }
 .credits__spaced, .credits__copyright { margin-top: 29px; }
 
 @media (max-width: 900px) {
@@ -125,8 +127,6 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   .closing__photo figcaption { font-size: 14px; line-height: 21px; margin-top: 12px; }
   .closing__copy h2 { font-size: 18px; line-height: 28px; }
   .credits { padding-top: 56px; padding-bottom: 80px; }
-  .credits__text, .credits__copyright { font-size: 18px; line-height: 26px; }
-  .credits__label { font-size: 16px; }
 }
 @media (max-height: 500px) and (orientation: landscape) {
   .hero__image { max-height: 35svh; }
