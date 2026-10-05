@@ -13,6 +13,8 @@
   const layerOpacities = new Map();
   let map;
   const locationMarkers = new Map();
+  let markerTargetKey;
+  let markerTransitionTimeout;
   let styleReady = false;
   let ready = false;
   let accessFailed = false;
@@ -46,12 +48,17 @@
   }
 
   function updateLocationMarkers() {
-    const location = config.locations?.[scene.id];
+    const location = ready ? config.locations?.[scene.id] : undefined;
     const key = location?.coordinates.join(',');
+    if (key === markerTargetKey && !reducedMotion.matches) return;
+    markerTargetKey = key;
+    const wasCollapsing = markerTransitionTimeout !== undefined;
+    clearTimeout(markerTransitionTimeout);
+    markerTransitionTimeout = undefined;
     if (location && !locationMarkers.has(key)) {
       const element = document.createElement('div');
       element.className = 'map-location-marker';
-      // Mapbox controls the wrapper; the inner dot owns its opacity transition.
+      // Mapbox positions the wrapper; the inner dot scales independently.
       element.setAttribute('aria-hidden', 'true');
       const dot = document.createElement('div');
       dot.className = 'map-location-dot';
@@ -59,13 +66,24 @@
       const marker = new window.mapboxgl.Marker({ element, anchor: 'center' })
         .setLngLat(location.coordinates).addTo(map);
       locationMarkers.set(key, { marker, dot });
-      // Establish the transparent starting state before fading a new dot in.
+      // Establish the collapsed state before expanding a new dot.
       dot.getBoundingClientRect();
     }
-    // Retain markers at their own locations so interrupted fades can reverse.
-    locationMarkers.forEach(({ dot }, markerKey) => {
-      dot.classList.toggle('is-visible', ready && markerKey === key);
+    let wasVisible = false;
+    locationMarkers.forEach(({ dot }) => {
+      wasVisible ||= dot.classList.contains('is-visible');
+      dot.classList.remove('is-visible');
     });
+    const reveal = () => {
+      markerTransitionTimeout = undefined;
+      locationMarkers.get(key)?.dot.classList.add('is-visible');
+    };
+    if (!reducedMotion.matches && (wasVisible || wasCollapsing)) {
+      // Match the CSS collapse duration; only the latest destination may open.
+      markerTransitionTimeout = window.setTimeout(reveal, 220);
+    } else {
+      reveal();
+    }
   }
 
   function selectScene(next) {

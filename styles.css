@@ -25,9 +25,9 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .skip-link:focus { transform: none; }
 
 /* Keep the hero artwork above the centred headline, as in the revised wireframe. */
-.hero__image { position: relative; overflow: hidden; }
-.hero__image > img { width: 100%; height: auto; max-height: min(65svh, 640px); object-fit: cover; object-position: center 40%; }
-.hero__brand { position: absolute; top: clamp(20px, 3vw, 48px); left: clamp(20px, 3vw, 48px); width: clamp(88px, 13vw, 180px); }
+.hero__image { position: relative; width: min(100%, 880px, 90svh); margin-inline: auto; overflow: hidden; }
+.hero__image > img { width: 100%; height: auto; }
+.hero__brand { position: absolute; top: clamp(16px, 3vw, 32px); left: clamp(16px, 3vw, 32px); width: clamp(72px, 16%, 140px); }
 .hero__copy { width: min(920px, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 64px; text-align: center; }
 h1 { margin: 0; font-family: "franklin-gothic-urw-comp", var(--font-sans-cond); font-size: clamp(2.6rem, 6.95vw, 6.25rem); line-height: .96; }
 h1 span { display: block; }
@@ -47,17 +47,18 @@ h1 span { display: block; }
 .map-world img { width: 100%; height: 100%; object-fit: contain; }
 .map-live { visibility: hidden; }
 .map-world.mapboxgl-map { font-family: var(--font-sans); }
-/* Animate only the halo: Mapbox owns the marker's positioning transform. */
+/* Scale the inner dot: Mapbox owns the marker wrapper's positioning transform. */
 .map-location-marker { width: 12px; height: 12px; pointer-events: none; }
-.map-location-dot { position: relative; width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; background: #202a32; box-shadow: 0 0 0 1px rgb(32 42 50 / 35%); pointer-events: none; opacity: 0; transition: opacity 650ms ease-in-out; }
-.map-location-dot.is-visible { opacity: 1; }
-.map-location-dot::before { content: ""; position: absolute; inset: -2px; border: 1px solid #202a32; border-radius: 50%; background: rgb(32 42 50 / 25%); animation: map-location-pulse 1.8s ease-out infinite; }
+.map-location-dot { position: relative; width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; background: #202a32; box-shadow: 0 0 0 1px rgb(32 42 50 / 35%); pointer-events: none; transform: scale(0); transition: transform 220ms ease-in; }
+.map-location-dot.is-visible { transform: scale(1); transition: transform 430ms cubic-bezier(.2, .9, .3, 1.35); }
+.map-location-dot::before { content: ""; position: absolute; inset: -2px; border: 1px solid #202a32; border-radius: 50%; background: rgb(32 42 50 / 25%); opacity: 0; }
+.map-location-dot.is-visible::before { animation: map-location-pulse 1.8s ease-out infinite; }
 @keyframes map-location-pulse {
   0% { transform: scale(1); opacity: .8; }
   100% { transform: scale(3.5); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .map-location-dot::before { animation: none; opacity: 0; }
+  .map-location-dot.is-visible::before { animation: none; opacity: 0; }
 }
 .map-status { position: absolute; left: 3%; bottom: 12px; max-width: 90%; padding: 6px 10px; background: #fff; color: #555; font: 14px/1.4 var(--font-sans); }
 /* Soften the footage against the paper background to keep the map and copy prominent. */
@@ -107,7 +108,7 @@ h1 span { display: block; }
   .is-enhanced .step__copy { width: 50%; padding: 24px; }
 }
 @media (max-width: 700px) {
-  .hero__image > img { max-height: none; }
+  .hero__image { width: 100%; }
   .hero__copy { padding-top: 48px; }
   h1 { font-size: clamp(32px, 9vw, 50px); }
   .hero__subhed { font-size: 18px; line-height: 1.5; margin: 32px auto 24px; }
