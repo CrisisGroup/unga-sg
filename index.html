@@ -3,31 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>How the Spotlight on Peace and Security Shifted at the 2026 UN General Assembly | International Crisis Group</title>
+  <title>Peace and Security Discourse at the 2026 UN General Assembly | International Crisis Group</title>
   <meta name="description" content="The speeches at the UN General Assembly this year focused their foreign policy attention on Gaza, Ukraine, Sudan and UN reform. Crisis Group experts analyse the issues world leaders picked out and what their remarks say about shifting diplomatic attention to major crises." />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="theme-color" content="#0f151b" />
+  <meta name="theme-color" content="#f2f2f2" />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="https://use.typekit.net/ehg7pjc.css" />
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.32.0/mapbox-gl.css" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.32.0/mapbox-gl.js" defer></script>
+  <script src="map-config.js" defer></script>
+  <script src="map.js" defer></script>
   <script src="scroll.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#introduction">Skip to story</a>
   <header class="hero">
     <div class="hero__image">
-      <img src="media/header.jpg" alt="The United Nations headquarters on New York’s East River." width="1280" height="720" fetchpriority="high" />
+      <img src="media/header-map.png" alt="World map artwork from the wireframe, with countries shaded in teal, pale turquoise and coral." width="4096" height="2731" fetchpriority="high" />
       <a class="hero__brand" href="https://www.crisisgroup.org">
-        <img src="media/icg-rgb-gray-white.png" alt="International Crisis Group" width="200" height="200" />
+        <img src="media/icg-black.png" alt="International Crisis Group" width="709" height="709" />
       </a>
     </div>
     <div class="hero__copy">
-      <h1>How the Spotlight on Peace and Security Shifted at the 2026 UN General Assembly</h1>
+      <h1><span>Peace and Security</span> <span>Discourse at the 2026 UN</span> <span>General Assembly</span></h1>
       <p class="hero__subhed">The speeches at the UN General Assembly this year focused their foreign policy attention on Gaza, Ukraine, Sudan and UN reform. Crisis Group experts analyse the issues world leaders picked out and what their remarks say about shifting diplomatic attention to major crises.</p>
-      <hr class="hero__divider" />
       <p class="hero__byline"><span>by the</span> <strong>INTERNATIONAL CRISIS GROUP</strong></p>
       <p class="hero__dateline">Published TK June, 2026</p>
-      <a class="hero__scroll-cue" href="#introduction" aria-label="Continue to introduction">↓</a>
     </div>
   </header>
   <main>
@@ -35,60 +37,48 @@
       <p>The more than 190 world leaders who came to New York for the high-level debate at last month’s UN General Assembly found a <a href="https://www.crisisgroup.org/global/sb13-ten-challenges-un-2025-2026">struggling organisation</a>. Those who took to the podium – 81 presidents, 38 prime ministers, six crowned royals, and 66 other dignitaries – used the platform to discuss an array of domestic and international concerns, ranging from peace and security to climate change and artificial intelligence. Although, as usual, many leaders devoted their speeches to national priorities instead of multilateral ones, a survey of their statements offers insights into the foreign policy issues that are of greatest importance to the UN membership. Crisis Group has analysed 191 speeches delivered during this year’s General Debate to identify trends in how leaders referenced four prominent peace and security issues: Palestine, Ukraine, Sudan and UN reform. Other crises – including Syria, Haiti and Myanmar – also attracted attention, but the four issues spotlighted here dominated the global concerns raised in the debate.</p>
     </section>
 
-    <!-- One persistent graphic; each narrative step selects a visual state. -->
-    <section class="scrolly" aria-label="Scroll-driven visual explanation" data-scrolly>
-      <figure class="scrolly__graphic" data-state="overview">
-        <div class="graphic__heading">
-          <p class="eyebrow">Graphic placeholder · Illustrative only</p>
-          <h2 id="graphic-title">The full picture</h2>
+    <!-- One persistent Mapbox map, driven by the narrative steps. -->
+    <section class="scrolly" aria-label="Peace and security issues at the General Assembly" data-scrolly>
+      <figure class="scrolly__graphic" data-scene="overview" data-theme="conflict">
+        <div class="map-backdrop" aria-hidden="true"></div>
+        <div class="map-stage">
+          <div id="story-map" class="map-world map-live" aria-label="World map of General Assembly speeches" aria-describedby="map-description"></div>
+          <div class="map-world" data-map-fallback>
+            <img src="media/maps/overview.png" alt="Reference overview of the world, shown while the map loads or when it is unavailable." width="1532" height="773" />
+          </div>
         </div>
-        <svg class="graphic" viewBox="0 0 800 620" role="img" aria-labelledby="graphic-svg-title graphic-svg-description">
-          <title id="graphic-svg-title">Placeholder graphic: the full picture</title>
-          <desc id="graphic-svg-description">An illustrative arrangement of circles. Scroll through the accompanying text to highlight a group and then reveal connections. This is not data.</desc>
-          <g class="graphic__guides" fill="none" stroke="currentColor">
-            <circle cx="400" cy="310" r="240" />
-            <circle cx="400" cy="310" r="170" />
-            <path d="M100 310H700 M400 30V590" />
-          </g>
-          <g class="graphic__connections" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M400 310L400 100 M400 310L582 205 M400 310L582 415 M400 310L400 520 M400 310L218 415 M400 310L218 205" />
-          </g>
-          <g class="graphic__other" fill="currentColor">
-            <circle cx="582" cy="415" r="34" /><circle cx="400" cy="520" r="34" /><circle cx="218" cy="415" r="34" />
-          </g>
-          <g class="graphic__focus" fill="currentColor">
-            <circle cx="218" cy="205" r="34" /><circle cx="400" cy="100" r="34" /><circle cx="582" cy="205" r="34" />
-          </g>
-          <circle class="graphic__center" cx="400" cy="310" r="64" fill="currentColor" />
-          <text x="400" y="316" text-anchor="middle">UNGA–SG</text>
-        </svg>
-        <figcaption><span data-graphic-count>01 / 06</span><span data-graphic-caption>Start with the whole graphic.</span></figcaption>
+        <p class="map-status" role="status" hidden>Map unavailable. Showing a reference overview.</p>
+        <figcaption id="map-description" class="visually-hidden">World map. Scroll through the story to explore the issues mentioned in General Assembly speeches.</figcaption>
       </figure>
       <div class="scrolly__steps">
-        <article class="step" data-step="overview" data-title="The full picture" data-caption="Start with the whole graphic.">
-          <div class="step__copy"><h3>PALESTINE</h3><p>The crisis in the Occupied Palestinian Territories was the most talked about issue of the high-level week, with 151 speakers making note of either Gaza or Palestine in their speeches. Despite the French-Saudi joint conference on the two-state solution that took place one day before the General Debate began, the mentions in 2025 represented only a small increase from 2024, where Crisis Group tracked 146 references to either Palestine or Lebanon (the latter being the other urgent situation in the Middle East last September).</p></div>
+        <article class="step" data-step="overview" data-theme="conflict" aria-label="Overview">
+          <div class="step__copy"><p>The more than 190 world leaders who came to New York for the high-level debate at last month’s UN General Assembly found a struggling organisation. Those who took to the podium – 81 presidents, 38 prime ministers, six crowned royals, and 66 other dignitaries – used the platform to discuss an array of domestic and international concerns, ranging from peace and security to climate change and artificial intelligence. They <strong>referred to both sides, only one side or partly</strong> or <strong>did not mention</strong> crises. They also mentioned UN reforms and the next Secretary General to varying degrees.</p></div>
         </article>
-        <article class="step" data-step="overview" data-title="The full picture" data-caption="Start with the whole graphic.">
-          <div class="step__copy"><h3>IRAN/HORMUZ</h3><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
+        <article class="step" data-step="palestine" data-theme="conflict" aria-labelledby="step-palestine">
+          <div class="step__copy"><h2 id="step-palestine">Palestine</h2><p>The crisis in the Occupied Palestinian Territories was the most talked about issue of the high-level week, with 151 speakers making note of <mark class="key key--both">Palestine or Gaza and the West Bank</mark> <mark class="key key--partial">only Palestine or Gaza</mark> or <mark class="key key--none">did not mention</mark> the conflict at all. Despite the French-Saudi joint conference on the two-state solution that took place one day before the General Debate began, the mentions in 2025 represented only a small increase from 2024, where Crisis Group tracked 146 references to either Palestine or Lebanon (the latter being the other urgent situation in the Middle East last September).</p></div>
         </article>
-        <article class="step" data-step="focus" data-title="A closer look" data-caption="Highlight one part of the picture.">
-          <div class="step__copy"><h3>UKRAINE</h3><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
+        <article class="step" data-step="iran-hormuz" data-theme="conflict" aria-labelledby="step-iran-hormuz">
+          <div class="step__copy"><h2 id="step-iran-hormuz">Iran/Hormuz</h2><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
         </article>
-        <article class="step" data-step="focus" data-title="A closer look" data-caption="Highlight one part of the picture.">
-          <div class="step__copy"><h3>SUDAN</h3><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
+        <article class="step" data-step="ukraine" data-theme="conflict" aria-labelledby="step-ukraine">
+          <div class="step__copy"><h2 id="step-ukraine">Ukraine</h2><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
         </article>
-        <article class="step" data-step="connections" data-title="How it connects" data-caption="Reveal the connections between elements.">
-          <div class="step__copy"><h3>UN REFORM</h3><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
+        <article class="step" data-step="sudan" data-theme="conflict" aria-labelledby="step-sudan">
+          <div class="step__copy"><h2 id="step-sudan">Sudan</h2><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
         </article>
-        <article class="step" data-step="connections" data-title="How it connects" data-caption="Reveal the connections between elements.">
-          <div class="step__copy"><h3>NEXT SG</h3><p>The conflict in Ukraine was mentioned by 106 countries, ten fewer than in 2024. Although this total represents a majority of UN member states, it is a noticeable decline from 2022 when 138 countries referenced the war. Similarly, 51 of the 106 countries that referenced Ukraine in 2025 did so without explicitly mentioning Russia, an increase from the 38 countries that followed this pattern in 2022.</p></div>
+        <article class="step" data-step="un-reform" data-theme="reform" aria-labelledby="step-un-reform">
+          <div class="step__copy"><h2 id="step-un-reform">UN Reform</h2><p>A total of 128 member states <mark class="key key--both">referred to both the UN80 and Security Council reform</mark>, <mark class="key key--partial">partly raised</mark>, or <mark class="key key--none">did not mention</mark> reform issues, an increase from the 100 countries that mentioned some strand of reform efforts in 2024. Two subsets of issues stood out. First, 73 member states explicitly referenced UN80, the Secretary-General’s initiative to reform the UN through immediate cost savings, a review of inter-governmental mandates, and structural transformations to the system.</p></div>
+        </article>
+        <article class="step" data-step="next-sg" data-theme="reform" aria-labelledby="step-next-sg">
+          <div class="step__copy"><h2 id="step-next-sg">Next SG</h2><p>Separately, 100 national statements mentioned the ever-present matter of Security Council reform, a continuing priority for many UN countries even as the prospect of reforming the Council’s composition (which requires member states to amend the UN Charter) appears <a href="https://time.com/7319232/u-n-security-council-is-struggling/">less likely</a> than it did in 2024, when the Biden administration devoted considerable attention to the issue.</p></div>
         </article>
       </div>
     </section>
 
     <section class="closing" aria-labelledby="outlook-title">
       <figure class="closing__photo">
-        <img src="media/general-assembly.jpg" alt="Delegates gathered beneath the illuminated ceiling of the United Nations General Assembly hall." width="1800" height="1200" loading="lazy" />
+        <img src="media/assembly-speaker.jpg" alt="A speaker at the General Assembly podium, with three officials seated behind him." width="547" height="365" loading="lazy" />
+        <figcaption>PLACEHOLDER XX speaks during the 79th Session of the United Nations General Assembly at the United Nations headquarters in New York City on September 27, 2024. Charly TRIBALLEAU / AFP</figcaption>
       </figure>
       <div class="closing__copy">
         <h2 id="outlook-title">Looking Ahead</h2>
@@ -101,11 +91,11 @@
   <footer class="credits">
     <div class="credits__inner">
       <p class="credits__text">
-        <span class="credits__label">Maps</span> Equal Earth projection; Mapbox.<br />
-        <span class="credits__label">Photos</span> Google Earth and Planet Labs
+        <span class="credits__label">Maps</span> Equal Earth projection, Mapbox.<br />
+        <span class="credits__label">Photography</span> AFP
       </p>
       <p class="credits__text credits__spaced">
-        Research and analysis by <strong>Daniel Forti</strong> and <strong>Esther Mano.</strong><br />
+        Research and analysis by <strong>Daniel Forti, Mariea Sekijima</strong> and <strong>Esther Mano.</strong><br />
         Visualisations by <strong>Claire Boccon-Gibod</strong> and <strong>Paul Franz.</strong>
       </p>
       <p class="credits__copyright">All rights Crisis Group.</p>
