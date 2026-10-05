@@ -16,7 +16,6 @@ img { display: block; max-width: 100%; height: auto; }
 [hidden] { display: none !important; }
 a { color: inherit; text-underline-offset: .15em; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
-h1 { font-family: var(--font-sansond); font-weight: 700; }
 h2 { font-family: var(--font-sans-cond); font-weight: 700; }
 p { margin: 0; font-size: 22px; line-height: 1.6; }
 :is(.chapter-copy, .step__copy, .closing__copy) > p + p { margin-block-start: 1em; }
@@ -25,17 +24,19 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .skip-link:focus { transform: none; }
 
 /* Keep the hero artwork above the centred headline, as in the revised wireframe. */
-.hero__image { position: relative; width: min(100%, 880px, 90svh); margin-inline: auto; overflow: hidden; }
+.hero__image { position: relative; width: 100%; }
 .hero__image > img { width: 100%; height: auto; }
+.hero__image::after { content: ""; position: absolute; inset: auto 0 0; height: 25%; background: linear-gradient(to bottom, transparent, var(--paper)); pointer-events: none; }
 .hero__brand { position: absolute; top: clamp(16px, 3vw, 32px); left: clamp(16px, 3vw, 32px); width: clamp(72px, 16%, 140px); }
-.hero__copy { width: min(920px, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 64px; text-align: center; }
-h1 { margin: 0; font-family: "franklin-gothic-urw-comp", var(--font-sans-cond); font-size: clamp(2.6rem, 6.95vw, 6.25rem); line-height: .96; }
+.hero__copy { width: min(920px, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: 64px; font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
+/* Restore the comp's three headline lines, scaling up to 96px in rem units. */
+h1 { width: 100%; max-width: 34ch; margin: 0 auto; font-family: var(--font-sans-cond); font-weight: 600; font-style: normal; font-size: clamp(2.6rem, 7.68vw, 6rem); line-height: .96; letter-spacing: 0; text-align: center; text-transform: none; }
 h1 span { display: block; }
-.hero__subhed { margin: 64px auto 32px; max-width: 880px; font-size: 24px; font-style: italic; line-height: 32px; }
-.hero__byline, .hero__dateline { font-family: var(--font-sans-cond); font-size: 24px; line-height: 32px; }
+.hero__subhed { margin: 2.667em auto 1.333em; max-width: 36.667em; font-size: 1em; font-style: italic; line-height: 1.333; }
+.hero__byline, .hero__dateline { font-family: var(--font-sans-cond); font-size: 1em; line-height: 1.333; }
 .hero__byline { margin-bottom: 8px; }
 .hero__byline span, .hero__dateline { color: var(--muted); }
-.hero__byline strong { color: #1b2a2d; font-size: 22px; letter-spacing: .06em; }
+.hero__byline strong { color: #1b2a2d; font-size: .917em; letter-spacing: .06em; }
 .chapter-copy { width: min(var(--copy-width), calc(100% - 2 * var(--gutter))); margin: 96px auto 0; }
 .chapter-copy > p::first-letter { float: left; margin: 6px 10px 0 0; font-size: 116px; line-height: .75; }
 
@@ -100,7 +101,6 @@ h1 span { display: block; }
 
 @media (max-width: 900px) {
   .hero__copy { padding-top: 64px; }
-  .hero__subhed { margin-top: 40px; font-size: 21px; line-height: 1.4; }
   .chapter-copy { margin-top: 72px; }
   .scrolly { margin-top: 80px; }
   .map-world { left: 0; width: 86%; }
@@ -108,9 +108,8 @@ h1 span { display: block; }
   .is-enhanced .step__copy { width: 50%; padding: 24px; }
 }
 @media (max-width: 700px) {
-  .hero__image { width: 100%; }
   .hero__copy { padding-top: 48px; }
-  h1 { font-size: clamp(32px, 9vw, 50px); }
+  h1 { max-width: 17ch; font-size: clamp(2rem, 10vw, 3.35rem); line-height: 1; }
   .hero__subhed { font-size: 18px; line-height: 1.5; margin: 32px auto 24px; }
   .hero__byline, .hero__dateline, .hero__byline strong { font-size: 18px; line-height: 27px; }
   p { font-size: 18px; }
