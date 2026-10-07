@@ -149,9 +149,10 @@
         interactive: false,
         renderWorldCopies: false,
         attributionControl: false,
+        logoPosition: 'bottom-right',
         fadeDuration: reducedMotion.matches ? 0 : 300
       });
-      map.addControl(new window.mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
+      map.addControl(new window.mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
       map.on('style.load', () => {
         styleReady = true;
         map.setProjection(config.projection);
