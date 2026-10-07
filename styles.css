@@ -51,14 +51,41 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .map-world.mapboxgl-map { font-family: var(--font-sans); }
 /* Scale the inner dot: Mapbox owns the marker wrapper's positioning transform. */
 .map-location-marker { width: 12px; height: 12px; pointer-events: none; }
-.map-location-dot { position: relative; width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; background: #202a32; box-shadow: 0 0 0 1px rgb(32 42 50 / 35%); pointer-events: none; transform: scale(0); transition: transform 220ms ease-in; }
-.map-location-dot.is-visible { transform: scale(1); transition: transform 430ms cubic-bezier(.2, .9, .3, 1.35); }
-.map-location-dot::before { content: ""; position: absolute; inset: -2px; border: 1px solid #202a32; border-radius: 50%; background: rgb(32 42 50 / 25%); opacity: 0; }
-.map-location-dot.is-visible::before { animation: map-location-pulse 1.8s ease-out infinite; }
-@keyframes map-location-pulse {
-  0% { transform: scale(1); opacity: .8; }
-  100% { transform: scale(3.5); opacity: 0; }
+
+.map-location-dot {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 75%);
+  box-shadow:
+    0 0 0 4px rgb(0 0 0 / 20%),
+    0 0 0 6px rgb(0 0 0 / 8%);
+  pointer-events: none;
+  transform: scale(0);
+  transition: transform 220ms ease-in;
 }
+.map-location-dot.is-visible {
+  transform: scale(1);
+  transition: transform 430ms cubic-bezier(.2, .9, .3, 1.35);
+}
+
+.map-location-dot::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 1px solid rgb(0 0 0 / 30%);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 6%);
+  opacity: 0;
+}
+.map-location-dot.is-visible::before { animation: map-location-pulse 1.8s ease-out infinite; }
+
+@keyframes map-location-pulse {
+  0%   { transform: scale(1);   opacity: .8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .map-location-dot.is-visible::before { animation: none; opacity: 0; }
 }
