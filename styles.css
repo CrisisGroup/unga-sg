@@ -100,13 +100,13 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .step__copy p { font-size: 16.5px; line-height: 1.6; }
 .step__copy strong, .key { font-family: var(--font-sans); font-weight: 700; }
 .key { padding: 1px 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-.key--both { color: #fff; background: #087773; }
-.key--partial { color: #000; background: #99d5d2; }
-.key--none { color: #fff; background: #b45240; }
+.key--both { color: #fff; background: #0f6e6a; }
+.key--partial { color: #000; background: #7fc8c0; }
+.key--none { color: #fff; background: #c9573c; }
 .step[data-theme="reform"] .step__copy { border-color: #7baaf4; }
-.step[data-theme="reform"] .key--both { background: #235294; }
-.step[data-theme="reform"] .key--partial { background: #85b8df; }
-.step[data-theme="reform"] .key--none { color: #000; background: #e6e7e8; }
+.step[data-theme="reform"] .key--both { background: #1f4e8c; }
+.step[data-theme="reform"] .key--partial { background: #6fa8dc; }
+.step[data-theme="reform"] .key--none { color: #000; background: #919191; }
 
 /* Left-hand cards scroll over the right-aligned sticky map. */
 .is-enhanced .scrolly__graphic { position: sticky; top: 0; height: 100svh; }

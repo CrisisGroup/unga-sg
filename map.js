@@ -129,6 +129,36 @@
     updateLocationMarkers();
   }
 
+  function updateCategoryChecks(expression, field) {
+    if (!Array.isArray(expression)) return expression;
+    if (field === 'palestine' && expression[0] === 'match' &&
+        expression[1]?.[0] === 'get' && expression[1][1] === field) {
+      expression = [...expression];
+      // Support both published label versions without overriding Studio colours.
+      const aliases = [
+        ['Palestine, Gaza or West Bank', 'Palestine or Gaza, with West Bank'],
+        ['Palestine or Gaza', 'Palestine or Gaza, without West Bank']
+      ];
+      for (let i = 2; i < expression.length - 1; i += 2) {
+        const labels = Array.isArray(expression[i]) ? [...expression[i]] : [expression[i]];
+        aliases.forEach(group => {
+          if (group.some(label => labels.includes(label))) {
+            group.forEach(label => { if (!labels.includes(label)) labels.push(label); });
+          }
+        });
+        expression[i] = labels;
+      }
+    }
+    // Some Studio expressions copied the Ukraine no-data predicate. Only repair
+    // those predicates; preserve the published category colours and other rules.
+    if (expression[0] === 'match' && expression[1]?.[0] === 'get' &&
+        expression[1][1] === 'ukraine' && Array.isArray(expression[2]) &&
+        expression[2].every(label => label === 'No data' || label === 'Not recognised')) {
+      return [expression[0], ['get', field], ...expression.slice(2)];
+    }
+    return expression.map(value => updateCategoryChecks(value, field));
+  }
+
   function initialise() {
     if (map) return;
     if (!config?.accessToken || !window.mapboxgl || !window.mapboxgl.supported()) {
@@ -167,18 +197,26 @@
         ['speech_data', 'unga-2026-blank'].forEach(id => {
           if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'none');
         });
-        // The tiles use newer category wording than the hosted Palestine expression.
-        // Keep the authored palette and accept both labels without changing Studio.
-        if (map.getLayer(config.layers.palestine)) {
-          map.setPaintProperty(config.layers.palestine, 'fill-color', [
-            'match', ['get', 'palestine'],
-            ['Palestine or Gaza, with West Bank', 'Palestine, Gaza or West Bank'], '#0f6e6a',
-            ['Palestine or Gaza, without West Bank', 'West Bank', 'Palestine or Gaza'], '#7fc8c0',
-            'Not mentioned', '#c9573c',
+        // Use the current Studio palette and tileset references, with consistent
+        // no-data handling based on each topic's own field.
+        const topicFields = {
+          palestine: 'palestine',
+          'iran-hormuz': 'iran_hormuz',
+          ukraine: 'ukraine',
+          sudan: 'sudan',
+          'un-reform': 'un_reform',
+          'next-sg': 'next_secretary_general'
+        };
+        Object.entries(topicFields).forEach(([step, field]) => {
+          const id = config.layers[step];
+          if (!map.getLayer(id)) return;
+          const colour = map.getPaintProperty(id, 'fill-color');
+          map.setPaintProperty(id, 'fill-color', [
+            'match', ['get', field],
             ['No data', 'Not recognised'], '#ffffff',
-            '#fafafa'
+            updateCategoryChecks(colour, field)
           ]);
-        }
+        });
         applyScene();
         fitWorld();
       });
