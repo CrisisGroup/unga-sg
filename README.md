@@ -14,7 +14,7 @@ Visit `http://localhost:8000/unga-sg/` to preview under the repository subpath u
 
 ## Editing
 
-- `index.html`: headline, introduction, seven scroll steps, Looking Ahead and credits. The new overview precedes Palestine, Iran/Hormuz, Ukraine, Sudan, UN Reform and Next SG.
+- `index.html`: headline, introduction, seven scroll steps, Conclusion and credits. The methodology overview precedes Palestine, Iran, Ukraine, Sudan, UN Reform and Next Secretary-General; existing scene IDs stay unchanged.
 - `styles.css`: responsive layout, sticky map stage, overlaid narrative cards, inline colour keys and closing-section typography. On mobile the map sits behind the cards; long paragraphs can scroll without being clipped by it.
 - `scroll.js`: selects the current narrative step in either scroll direction and emits `story:stepchange` on `[data-scrolly]`. It also handles resize, font loading and browser history restoration.
 - `map.js`: one persistent Mapbox GL JS map, kept separate from the narrative controller. It loads near the scrolly, switches thematic layers, resizes to fit the world and handles the static fallback.
@@ -43,7 +43,7 @@ The renderer reads the published style's current tileset references and category
 
 The public `pk.` token in `map-config.js` is reused from `unga-2025/config.js` for the same Mapbox account. If its URL restrictions change, allow localhost and `https://crisisgroup.github.io/unga-sg/` (and any custom domain). Keep secret tokens out of browser assets. The style and vector tiles load directly from Mapbox; GitHub Pages still needs no server or build step. See the [Mapbox GL JS API](https://docs.mapbox.com/mapbox-gl-js/api/map/) for map configuration.
 
-The supplied PDF is draft copy: its date is “Published TK June, 2026”, Iran/Hormuz and Sudan repeat the Ukraine paragraph, the photo caption starts “PLACEHOLDER XX”, and the closing paragraph says “other for a”. These are preserved as supplied, with PDF extraction artifacts and stray spacing normalised. The introduction discusses four issues while the scrolly has an overview and six topics. Review the draft copy and credits before publication, remove `noindex, nofollow` when ready, and add the final canonical URL and social metadata once the publication location is known.
+The body copy comes from `Post-UNGA Analysis 2026 - For Policy Review.docx`. Its opening paragraph appears in the introduction, and its methodology paragraph and footnote appear in the overview card. The six topic sections retain their paragraphs and hyperlinks, with the supplied category labels and counts used as map colour keys. Conclusion replaces Looking Ahead. Editorial comments and duplicate standalone caption summaries are not rendered. The author's current headline and subheadline are preserved and also used in the page metadata. Review the policy draft and credits before publication, replace the placeholder publication date, remove `noindex, nofollow` when ready, and add the final canonical URL and social metadata once the publication location is known.
 
 Without JavaScript the overview map and all seven narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
 
