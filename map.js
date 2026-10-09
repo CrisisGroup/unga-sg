@@ -92,7 +92,7 @@
     figure.dataset.theme = next.theme;
     const step = [...section.querySelectorAll('[data-step]')].find(item => item.dataset.step === next.id);
     const title = step?.querySelector('h2')?.textContent || 'Overview';
-    description.textContent = `${title}: world map of General Assembly speeches. ${next.id === 'overview' ? 'Scroll through the topics to explore the data.' : 'The colour key in the story card explains the country colours.'}`;
+    description.textContent = `${title}: world map of General Assembly speeches. ${next.id === 'overview' ? 'Scroll through the topics to explore the data.' : 'The map colour key explains the country colours.'}`;
     const location = config?.locations?.[next.id];
     if (location) description.textContent += ` A dot marks ${location.label}.`;
     applyScene();
