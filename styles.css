@@ -32,7 +32,7 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .hero__copy { width: min(68.75rem, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: clamp(1.5rem, 4svh, 3rem); font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
 /* Match minerals' main headline, including its 760px text column. */
 h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(--font-sans-cond); font-weight: 600; font-style: normal; font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: .96; letter-spacing: 0; text-align: center; text-transform: none; }
-.hero__subhed { margin: 2.667em auto 1.333em; max-width: 36.667em; font-size: 1em; font-style: italic; line-height: 1.333; }
+.hero__subhed { margin: 2.667em auto 1.333em; max-width: 36.667em; font-size: 1em; font-style: italic; line-height: 1.6em; }
 .hero__byline, .hero__dateline { font-family: var(--font-sans-cond); font-size: 1em; line-height: 1.333; }
 .hero__byline { margin-bottom: 8px; }
 .hero__byline span, .hero__dateline { color: var(--muted); }

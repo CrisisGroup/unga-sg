@@ -1,6 +1,6 @@
 # UNGA–SG
 
-A single-page static visual explainer based on `Wireframe (1).pdf`. It uses a light editorial layout, map artwork above the headline, seven map-scrolly cards, and a white closing section. No build step or runtime server is required.
+A single-page static visual explainer based on `Wireframe (1).pdf`. It uses a light editorial layout, map artwork above the headline, ten map-scrolly cards, and a white closing section. No build step or runtime server is required.
 
 ## Preview
 
@@ -14,7 +14,7 @@ Visit `http://localhost:8000/unga-sg/` to preview under the repository subpath u
 
 ## Editing
 
-- `index.html`: headline, introduction, seven scroll steps, Conclusion and credits. The methodology overview precedes Palestine, Iran, Ukraine, Sudan, UN Reform and Next Secretary-General; existing scene IDs stay unchanged.
+- `index.html`: headline, introduction, ten scroll steps, Conclusion and credits. The methodology overview precedes Palestine, Iran, Ukraine, Sudan, UN Reform and Next Secretary-General; existing scene IDs stay unchanged. Palestine spans two cards and Ukraine spans three, with one paragraph and the full legend on each card; only the first card has a visible heading. Cards for the same topic share `data-step` and use `data-part` for their sequence number, keeping the map layer and location steady.
 - `styles.css`: responsive layout, sticky map stage, overlaid narrative cards, inline colour keys and closing-section typography. On mobile the map sits behind the cards; long paragraphs can scroll without being clipped by it.
 - `scroll.js`: selects the current narrative step in either scroll direction and emits `story:stepchange` on `[data-scrolly]`. It also handles resize, font loading and browser history restoration.
 - `map.js`: one persistent Mapbox GL JS map, kept separate from the narrative controller. It loads near the scrolly, switches thematic layers, resizes to fit the world and handles the static fallback.
@@ -45,7 +45,7 @@ The public `pk.` token in `map-config.js` is reused from `unga-2025/config.js` f
 
 The body copy comes from `Post-UNGA Analysis 2026 - For Policy Review.docx`. Its opening paragraph appears in the introduction, and its methodology paragraph and footnote appear in the overview card. The six topic sections retain their paragraphs and hyperlinks, with the supplied category labels and counts used as map colour keys. Conclusion replaces Looking Ahead. Editorial comments and duplicate standalone caption summaries are not rendered. The author's current headline and subheadline are preserved and also used in the page metadata. Review the policy draft and credits before publication, replace the placeholder publication date, remove `noindex, nofollow` when ready, and add the final canonical URL and social metadata once the publication location is known.
 
-Without JavaScript the overview map and all seven narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
+Without JavaScript the overview map and all ten narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
 
 ## GitHub Pages
 
