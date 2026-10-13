@@ -45,9 +45,9 @@ The renderer reads the published style's current tileset references and category
 
 Vatican City is represented by a small circle at `[12.4533, 41.90225]` ([GeoNames location](https://www.geonames.org/3164670/vatican-city.html)). Its radius is 4px with a 1px outline on desktop, reduced to 2.5px with a 0.65px outline at viewport widths up to 700px or in landscape viewports up to 500px tall. It updates on resize and rotation. Its feature in `countryPoints` uses the same fields as the tileset, with the supplied categories: Gaza/Palestine and the West Bank; no Iran/Hormuz reference; Ukraine only; Sudan mentioned; UN80 only; and no next Secretary-General reference. Point layers inherit the country layers' colour expressions, filters, opacity and transitions, including staged non-mention reveals. They are hidden in the neutral overview. Editing these point features does not change the hosted tileset or the article's aggregate counts.
 
-The public `pk.` token in `map-config.js` is reused from `unga-2025/config.js` for the same Mapbox account. If its URL restrictions change, allow localhost and `https://crisisgroup.github.io/unga-sg/` (and any custom domain). Keep secret tokens out of browser assets. The style and vector tiles load directly from Mapbox; GitHub Pages still needs no server or build step. See the [Mapbox GL JS API](https://docs.mapbox.com/mapbox-gl-js/api/map/) for map configuration.
+The public `pk.` token in `map-config.js` is reused from `unga-2025/config.js` for the same Mapbox account. If its URL restrictions change, allow localhost, `https://crisisgroup.github.io/unga-sg/` and the final production URL on `https://www.crisisgroup.org/`. Keep secret tokens out of browser assets. The style and vector tiles load directly from Mapbox; GitHub Pages still needs no server or build step. See the [Mapbox GL JS API](https://docs.mapbox.com/mapbox-gl-js/api/map/) for map configuration.
 
-Before publishing, review the article, captions and legend counts together and replace the placeholder publication date. Search indexing is enabled; canonical and preview metadata use the GitHub Pages URL documented below.
+Before publishing, review the article, captions and legend counts together and replace the placeholder publication date. Search indexing is enabled; canonical and preview metadata temporarily use the GitHub Pages URL until the production slug is confirmed.
 
 Without JavaScript the fallback artwork and all eleven narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
 
@@ -74,7 +74,13 @@ The supplied `thumbnail (2).png` (1280 × 800; 496,213 bytes) was exported as JP
 
 The search variants follow [Google's Article image recommendations](https://developers.google.com/search/docs/appearance/structured-data/article), and the wide variant supports [large Discover previews](https://developers.google.com/search/docs/appearance/google-discover). Platforms choose their final crop and may cache an earlier preview.
 
-Crawler-facing URLs are absolute HTTPS URLs under `https://crisisgroup.github.io/unga-sg/`. If the public domain or repository path changes, update the canonical link, `image_src`, Open Graph, Twitter image and JSON-LD URLs together; runtime assets remain relative. Deploy the HTML and all four images together, then check the public image URLs return JPEGs and refresh cached previews with the relevant platform's sharing debugger. A publication date is intentionally omitted from JSON-LD until the visible placeholder date has been replaced.
+Crawler-facing URLs temporarily use `https://crisisgroup.github.io/unga-sg/`. The production destination is `https://www.crisisgroup.org/visual-explainers/[slug]/`, with the slug intentionally undecided. Once confirmed, replace every occurrence of the GitHub Pages base URL in `index.html` with the final production base URL, including its trailing slash. This updates the canonical link, `image_src`, Open Graph, Twitter image and JSON-LD article, image and logo URLs together. Keep the final URLs static in the HTML so crawlers can read them without JavaScript; runtime assets remain relative. Do not put the placeholder slug into live metadata.
+
+Deploy the HTML and all four images together, then check the public image URLs return JPEGs and refresh cached previews with the relevant platform's sharing debugger. A publication date is intentionally omitted from JSON-LD until the visible placeholder date has been replaced.
+
+## Production deployment
+
+The final site will be hosted at `https://www.crisisgroup.org/visual-explainers/[slug]/`. Confirm the slug before changing the metadata URLs or publishing to that path. Serve the static site files and `media/` from this directory, keeping their relative layout. No runtime server or route rewrites are required. GitHub Pages remains available as a preview deployment.
 
 ## GitHub Pages
 
@@ -82,6 +88,6 @@ Repository: https://github.com/CrisisGroup/unga-sg
 
 Pages is configured in **Settings → Pages → Build and deployment** using **Deploy from a branch**, branch **main**, folder **/ (root)**. Every push to `main` republishes the site. The included `.nojekyll` file serves the static files directly; no custom workflow, package installation or secrets are needed.
 
-Site: https://crisisgroup.github.io/unga-sg/
+Preview site: https://crisisgroup.github.io/unga-sg/
 
 It also works at a domain root. There are no sub-pages or routes requiring rewrites. To reproduce the deployment in another repository, select the same branch and folder in its Pages settings.
