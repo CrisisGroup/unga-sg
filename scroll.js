@@ -18,15 +18,15 @@
   legendDock.setAttribute('aria-label', 'Current map colour key');
   legendDock.hidden = true;
   section.append(legendDock);
-  let legendTopic;
+  let legendStep;
   let active = -1;
   let pending = false;
 
   function updateLegend(step, bounds) {
-    if (legendTopic !== step.dataset.step) {
-      legendTopic = step.dataset.step;
-      const topic = topics.get(legendTopic);
-      const legend = topic.querySelector('.step__legend');
+    if (legendStep !== step) {
+      legendStep = step;
+      const topic = topics.get(step.dataset.step);
+      const legend = step.querySelector('.step__legend') || topic.querySelector('.step__legend');
       legendDock.replaceChildren();
       if (legend) {
         const title = document.createElement('div');
@@ -35,7 +35,7 @@
         legendDock.append(title, legend.cloneNode(true));
       }
       legendDock.dataset.theme = step.dataset.theme;
-      legendDock.dataset.topic = legendTopic;
+      legendDock.dataset.topic = step.dataset.step;
     }
     // The dock belongs to the pinned map, never the introduction or conclusion.
     legendDock.hidden = !portrait.matches || !legendDock.childElementCount ||

@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --paper: #f2f2f2;
   --ink: #000;
   --muted: #555;
@@ -16,7 +16,7 @@ img { display: block; max-width: 100%; height: auto; }
 [hidden] { display: none !important; }
 a { color: inherit; text-underline-offset: .15em; }
 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
-h2 { font-family: var(--font-sans-cond); font-weight: 700; }
+h2 { font-family: var(--font-sans); font-weight: 700; }
 p { margin: 0; font-size: 22px; line-height: 1.6; }
 :is(.chapter-copy, .step__copy, .closing__copy) > p + p { margin-block-start: 1em; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
@@ -37,7 +37,7 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .hero__byline span, .hero__dateline { color: var(--muted); }
 .hero__byline strong { color: #1b2a2d; font-size: .917em; letter-spacing: .06em; }
 .chapter-copy { width: min(var(--copy-width), calc(100% - 2 * var(--gutter))); margin: 96px auto 0; }
-.chapter-copy > p::first-letter { float: left; margin: 6px 10px 0 0; font-size: 116px; line-height: .75; }
+.chapter-copy > p:first-of-type::first-letter { float: left; margin: 6px 10px 0 0; font-size: 116px; line-height: .75; }
 
 /* One live map stage; narrative cards remain ordinary HTML. */
 .scrolly { position: relative; margin-top: 0;}
@@ -100,8 +100,10 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .step__copy h2 { margin: 0; font-size: 16.5px; line-height: 25px; letter-spacing: .08em; text-transform: uppercase; }
 .step__copy p { font-size: 16.5px; line-height: 1.6; }
 .step__legend { display: grid; gap: .65em; margin: 1.5em 0 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.6; }
-.step__copy strong, .key { font-family: var(--font-sans); font-weight: 700; }
-.key { padding: 1px 4px; background: var(--key-color); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.step__copy :is(strong, b) { font-family: inherit; font-size: inherit; line-height: inherit; font-weight: 700; }
+.step[data-step="overview"] .step__copy :is(strong, b) { font-family: var(--font-sans); }
+.key { font-family: var(--font-sans); font-weight: 500; }
+.key { padding: 2px 6px; background: var(--key-color); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .key--both { --key-color: #0f6e6a; color: #fff; }
 .key--partial { --key-color: #7fc8c0; color: #000; }
 .key--none { --key-color: #c9573c; color: #fff; }
@@ -112,9 +114,8 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .map-legend-dock { display: none; }
 .step--blank { display: none; }
 @media (min-width: 1000px) and (orientation: landscape) {
-  .step[data-theme="conflict"] .step__legend { display: flex; flex-wrap: wrap; gap: .65em 12px; font-size: 13px; }
-  .step[data-theme="conflict"] .step__legend .key { font-family: var(--font-sans-cond); }
-  .step[data-theme="conflict"] .step__legend li:nth-child(3) { flex-basis: 100%; }
+  .step .step__legend { display: flex; flex-wrap: wrap; gap: .65em 12px; font-size: 13px; }
+  .step .step__legend .key { display: inline-block; font-family: var(--font-sans); letter-spacing: .05em; }
 }
 
 /* Left-hand cards scroll over the right-aligned sticky map. */
@@ -140,7 +141,7 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   opacity: 0.75;
 }
 .closing__copy, .credits__inner { width: min(var(--copy-width), 100%); margin: 0 auto; }
-.closing__copy h2 { margin: 0; font-size: 22px; line-height: 33px; letter-spacing: .1em; text-transform: uppercase; }
+.closing__copy h2 { margin: 0; font-size: 22px; line-height: 45px; letter-spacing: .06em; text-transform: uppercase; }
 .credits { background: #fff; color: #414141; padding: 116px var(--gutter) 180px; }
 .credits__label { opacity: .75; font-family: var(--font-sans-cond); font-size: .95rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
 .credits__text, .credits__copyright { opacity: .85; font: 1.2rem/1.6 var(--font-sans); }
@@ -162,7 +163,7 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   .hero__byline, .hero__dateline, .hero__byline strong { font-size: 18px; line-height: 27px; }
   p { font-size: 18px; }
   .chapter-copy { margin-top: 56px; }
-  .chapter-copy > p::first-letter { font-size: 88px; margin-top: 5px; }
+  .chapter-copy > p:first-of-type::first-letter { font-size: 88px; margin-top: 5px; }
   .scrolly { margin-top: 56px; }
   .scrolly__graphic { height: 60vw; }
   .map-world { right: 0; width: 100%; }
@@ -186,7 +187,7 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   .is-enhanced .map-legend-dock { display: block; position: fixed; inset: auto 0 0; z-index: 3; max-height: 45dvh; overflow-y: auto; padding: 12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); background: #fff; border-top: 1px solid #d4d4d4; box-shadow: 0 -4px 20px rgb(0 0 0 / 6%); }
   .map-legend-dock__title { max-width: 600px; margin: 0 auto 8px; font: 700 14px/1.3 var(--font-sans-cond); letter-spacing: .06em; text-transform: uppercase; }
   .map-legend-dock .step__legend { max-width: 600px; margin: 0 auto; gap: 6px; }
-  .map-legend-dock .key { display: grid; grid-template-columns: 10px 1fr; gap: 8px; align-items: baseline; padding: 0; background: none; color: var(--ink); font: 400 13px/1.35 var(--font-sans); }
+  .map-legend-dock .key { display: grid; grid-template-columns: 10px 1fr; gap: 8px; align-items: baseline; padding: 0; background: none; color: var(--ink); font: 500 13px/1.35 var(--font-sans); }
   .map-legend-dock .key::before { content: ""; width: 10px; height: 10px; background: var(--key-color); }
 }
 @media (max-height: 500px) and (orientation: landscape) {
@@ -199,4 +200,16 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   .map-location-dot.is-visible::before { animation: none; opacity: 0; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
+}
+
+/* Align the opening capital to the third text baseline at either body size. */
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+  .chapter-copy > p:first-of-type::first-letter {
+    -webkit-initial-letter: 3;
+    initial-letter: 3;
+    float: none;
+    margin: 0 10px 0 0;
+    font-size: inherit;
+    line-height: normal;
+  }
 }

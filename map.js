@@ -341,7 +341,7 @@
           id: emphasisLayer, type: 'line', source: ukraineLayer.source,
           'source-layer': ukraineLayer['source-layer'],
           filter: ['match', ['get', 'iso3'], ['MLI', 'NER'], true, false],
-          paint: { 'line-color': '#172c2b', 'line-width': 2.5, 'line-opacity': 0 }
+          paint: { 'line-color': '#172c2b', 'line-width': 1.5, 'line-opacity': 0 }
         });
         applyScene();
         fitWorld();
