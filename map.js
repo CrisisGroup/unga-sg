@@ -1,4 +1,4 @@
-﻿/* A single Mapbox instance renders the style's existing thematic layers. */
+/* A single Mapbox instance renders the style's existing thematic layers. */
 (() => {
   const section = document.querySelector('[data-scrolly]');
   if (!section) return;
@@ -8,10 +8,24 @@
   const status = section.querySelector('.map-status');
   const description = section.querySelector('#map-description');
   const config = window.UNGA_MAP_CONFIG;
+  const steps = [...section.querySelectorAll('[data-step]')];
+  const topicTitles = new Map();
+  steps.forEach(step => {
+    if (!topicTitles.has(step.dataset.step)) {
+      topicTitles.set(step.dataset.step, step.querySelector('h2')?.textContent || 'Overview');
+    }
+  });
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const stepTransitionDuration = 650;
   const layerOpacities = new Map();
+  const stagedLayers = new Map();
+  const appliedOpacities = new Map();
+  const emphasisLayer = 'story-mali-niger';
+  let emphasisTimer;
+  let emphasisActive = false;
   let map;
+  let captionPanel;
+  let captionTopic;
   const locationMarkers = new Map();
   let markerTargetKey;
   let markerTransitionTimeout;
@@ -19,14 +33,23 @@
   let ready = false;
   let accessFailed = false;
   let timeout;
-  let active = section.querySelector('.step.is-active') || section.querySelector('[data-step]');
-  let scene = { id: active.dataset.step, theme: active.dataset.theme };
+  const active = section.querySelector('.step.is-active') || steps[0];
+  let scene = { id: active.dataset.step, part: Number(active.dataset.part || 1), theme: active.dataset.theme };
 
   function showFallback() {
+    ready = false;
     fallback.hidden = false;
     status.hidden = false;
     container.style.visibility = 'hidden';
     figure.dataset.mapStatus = 'fallback';
+  }
+
+  function setLayerOpacity(id, opacity, duration) {
+    const previous = appliedOpacities.get(id);
+    if (previous?.opacity === opacity && previous.duration === duration) return;
+    map.setPaintProperty(id, 'fill-opacity-transition', { duration, delay: 0 });
+    map.setPaintProperty(id, 'fill-opacity', opacity);
+    appliedOpacities.set(id, { opacity, duration });
   }
 
   function applyScene() {
@@ -40,22 +63,56 @@
     // opacity, including smoothly retargeting a transition during rapid scrolling.
     const duration = ready && !reducedMotion.matches ? stepTransitionDuration : 0;
     layerOpacities.forEach((opacity, id) => {
-      map.setPaintProperty(id, 'fill-opacity-transition', { duration, delay: 0 });
-      map.setPaintProperty(id, 'fill-opacity', id === selected ? opacity : 0);
+      setLayerOpacity(id, id === selected ? opacity : 0, duration);
     });
+    stagedLayers.forEach(({ topic, opacity }, id) => {
+      const revealAt = topic === 'palestine' ? 2 : 3;
+      const visible = scene.id === topic && (scene.part || 1) >= revealAt;
+      setLayerOpacity(id, visible ? opacity : 0, duration);
+    });
+    updateEmphasis();
     updateLocationMarkers();
     figure.dataset.activeLayer = selected || '';
   }
 
+  function updateEmphasis() {
+    if (!map.getLayer(emphasisLayer)) return;
+    const enabled = scene.id === 'ukraine' && scene.part === 2;
+    if (enabled && emphasisActive && !reducedMotion.matches) return;
+    clearTimeout(emphasisTimer);
+    emphasisActive = enabled;
+    map.setPaintProperty(emphasisLayer, 'line-opacity-transition', {
+      duration: enabled && !reducedMotion.matches ? 250 : 0, delay: 0
+    });
+    map.setPaintProperty(emphasisLayer, 'line-opacity', enabled ? 1 : 0);
+    if (!enabled || reducedMotion.matches) return;
+    let pulses = 0;
+    const flicker = () => {
+      pulses += 1;
+      map.setPaintProperty(emphasisLayer, 'line-opacity', pulses % 2 ? 0.15 : 1);
+      if (pulses < 6) emphasisTimer = window.setTimeout(flicker, 550);
+    };
+    emphasisTimer = window.setTimeout(flicker, 550);
+  }
+
+  function sceneLocations() {
+    const locations = scene.id === 'overview'
+      ? Object.values(config?.locations || {})
+      : [config?.locations?.[scene.id]].filter(Boolean);
+    // UN reform and the next Secretary-General share the headquarters marker.
+    return new Map(locations.map(location => [location.coordinates.join(','), location]));
+  }
+
   function updateLocationMarkers() {
-    const location = ready ? config.locations?.[scene.id] : undefined;
-    const key = location?.coordinates.join(',');
-    if (key === markerTargetKey && !reducedMotion.matches) return;
-    markerTargetKey = key;
+    const locations = ready ? sceneLocations() : new Map();
+    const targetKey = [...locations.keys()].sort().join('|');
+    if (targetKey === markerTargetKey && !reducedMotion.matches) return;
+    markerTargetKey = targetKey;
     const wasCollapsing = markerTransitionTimeout !== undefined;
     clearTimeout(markerTransitionTimeout);
     markerTransitionTimeout = undefined;
-    if (location && !locationMarkers.has(key)) {
+    locations.forEach((location, key) => {
+      if (locationMarkers.has(key)) return;
       const element = document.createElement('div');
       element.className = 'map-location-marker';
       // Mapbox positions the wrapper; the inner dot scales independently.
@@ -68,7 +125,7 @@
       locationMarkers.set(key, { marker, dot });
       // Establish the collapsed state before expanding a new dot.
       dot.getBoundingClientRect();
-    }
+    });
     let wasVisible = false;
     locationMarkers.forEach(({ dot }) => {
       wasVisible ||= dot.classList.contains('is-visible');
@@ -76,7 +133,7 @@
     });
     const reveal = () => {
       markerTransitionTimeout = undefined;
-      locationMarkers.get(key)?.dot.classList.add('is-visible');
+      locations.forEach((location, key) => locationMarkers.get(key)?.dot.classList.add('is-visible'));
     };
     if (!reducedMotion.matches && (wasVisible || wasCollapsing)) {
       // Match the CSS collapse duration; only the latest destination may open.
@@ -86,15 +143,37 @@
     }
   }
 
+  function updateCaption() {
+    if (!captionPanel || captionTopic === scene.id) return;
+    captionTopic = scene.id;
+    const caption = config.captions?.[scene.id];
+    captionPanel.replaceChildren();
+    captionPanel.hidden = !caption;
+    if (caption) {
+      const title = document.createElement('h3');
+      title.textContent = caption.title;
+      const text = document.createElement('p');
+      text.textContent = caption.text;
+      captionPanel.append(title, text);
+    }
+  }
+
   function selectScene(next) {
     scene = next;
+    updateCaption();
     figure.dataset.scene = next.id;
     figure.dataset.theme = next.theme;
-    const step = [...section.querySelectorAll('[data-step]')].find(item => item.dataset.step === next.id);
-    const title = step?.querySelector('h2')?.textContent || 'Overview';
+    const title = topicTitles.get(next.id) || 'Overview';
     description.textContent = `${title}: world map of General Assembly speeches. ${next.id === 'overview' ? 'Scroll through the topics to explore the data.' : 'The map colour key explains the country colours.'}`;
-    const location = config?.locations?.[next.id];
-    if (location) description.textContent += ` A dot marks ${location.label}.`;
+    const labels = [...sceneLocations().values()].map(location => location.label);
+    if (labels.length) description.textContent += labels.length === 1
+      ? ` A dot marks ${labels[0]}.`
+      : ` Dots mark ${labels.join('; ')}.`;
+    if ((next.id === 'palestine' && (next.part || 1) < 2) ||
+        (next.id === 'ukraine' && (next.part || 1) < 3)) {
+      description.textContent += ' Only countries that referred to this topic are coloured.';
+    }
+    if (next.id === 'ukraine' && next.part === 2) description.textContent += ' Mali and Niger are highlighted.';
     applyScene();
   }
 
@@ -117,7 +196,7 @@
   }
 
   function revealMap() {
-    if (!map || accessFailed || !map.isStyleLoaded() || !map.areTilesLoaded()) return;
+    if (ready || !map || accessFailed || !map.isStyleLoaded() || !map.areTilesLoaded()) return;
     const selected = config.layers[scene.id];
     if (selected && !map.getLayer(selected)) return;
     ready = true;
@@ -182,11 +261,33 @@
         logoPosition: 'bottom-right',
         fadeDuration: reducedMotion.matches ? 0 : 300
       });
-      map.addControl(new window.mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
+      // Extend the public control lifecycle, keeping Mapbox's own attribution
+      // content and toggle intact when sources update or the story changes.
+      class StoryAttributionControl extends window.mapboxgl.AttributionControl {
+        onAdd(mapInstance) {
+          const element = super.onAdd(mapInstance);
+          element.classList.add('story-attribution');
+          captionPanel = document.createElement('div');
+          captionPanel.className = 'story-attribution__caption';
+          captionPanel.setAttribute('aria-live', 'polite');
+          captionPanel.setAttribute('aria-atomic', 'true');
+          element.insertBefore(captionPanel, element.querySelector('.mapboxgl-ctrl-attrib-inner'));
+          const button = element.querySelector('button');
+          button.setAttribute('aria-label', 'Toggle map caption and attribution');
+          button.setAttribute('aria-expanded', 'false');
+          updateCaption();
+          return element;
+        }
+      }
+      map.addControl(new StoryAttributionControl({ compact: true }), 'bottom-right');
       map.on('style.load', () => {
         styleReady = true;
         map.setProjection(config.projection);
         layerOpacities.clear();
+        stagedLayers.clear();
+        appliedOpacities.clear();
+        clearTimeout(emphasisTimer);
+        emphasisActive = false;
         Object.values(config.layers).filter(Boolean).forEach(id => {
           if (!map.getLayer(id)) return;
           layerOpacities.set(id, map.getPaintProperty(id, 'fill-opacity') ?? 1);
@@ -216,6 +317,31 @@
             ['No data', 'Not recognised'], '#ffffff',
             updateCategoryChecks(colour, field)
           ]);
+        });
+        // Split the non-mention category into its own layer so it can fade in
+        // without changing the green categories or the hosted Studio style.
+        const styleLayers = map.getStyle().layers;
+        ['palestine', 'ukraine'].forEach(topic => {
+          const baseId = config.layers[topic];
+          const base = styleLayers.find(layer => layer.id === baseId);
+          if (!base) return;
+          const id = `${baseId}-not-mentioned`;
+          const originalFilter = base.filter;
+          const withFilter = condition => originalFilter ? ['all', originalFilter, condition] : condition;
+          map.addLayer({
+            ...base, id,
+            filter: withFilter(['==', ['get', topic], 'Not mentioned']),
+            paint: { ...base.paint, 'fill-opacity': 0 }
+          }, baseId);
+          map.setFilter(baseId, withFilter(['!=', ['get', topic], 'Not mentioned']));
+          stagedLayers.set(id, { topic, opacity: layerOpacities.get(baseId) });
+        });
+        const ukraineLayer = styleLayers.find(layer => layer.id === config.layers.ukraine);
+        if (ukraineLayer) map.addLayer({
+          id: emphasisLayer, type: 'line', source: ukraineLayer.source,
+          'source-layer': ukraineLayer['source-layer'],
+          filter: ['match', ['get', 'iso3'], ['MLI', 'NER'], true, false],
+          paint: { 'line-color': '#172c2b', 'line-width': 2.5, 'line-opacity': 0 }
         });
         applyScene();
         fitWorld();

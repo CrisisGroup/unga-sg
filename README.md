@@ -1,31 +1,33 @@
 # UNGA–SG
 
-A single-page static visual explainer based on `Wireframe (1).pdf`. It uses a light editorial layout, map artwork above the headline, ten map-scrolly cards, and a white closing section. No build step or runtime server is required.
+A single-page static visual explainer about peace and security issues at the 2026 UN General Assembly. It uses a light editorial layout, map artwork above the headline, eleven map-scrolly cards and a final map-only scroll, and a white closing section. No build step or runtime server is required.
 
 ## Preview
 
-From the parent `github` directory run:
+From this project directory run:
 
 ```sh
-python -m http.server 8000
+python3 -m http.server 8030 --bind 127.0.0.1
 ```
 
-Visit `http://localhost:8000/unga-sg/` to preview under the repository subpath used by GitHub Pages. All local assets use relative URLs. The live map requires network access and WebGL; an overview image remains readable if either is unavailable. Adobe Fonts is optional; system serif and sans-serif fallbacks are provided.
+Visit `http://127.0.0.1:8030/`. To test the GitHub Pages subpath, run the server from the parent directory and visit `/unga-sg/`. All local assets use relative URLs. The live map requires network access and WebGL; the existing header artwork serves as a decorative fallback if either is unavailable. Adobe Fonts is optional; system serif and sans-serif fallbacks are provided.
 
 ## Editing
 
-- `index.html`: headline, introduction, ten scroll steps, Conclusion and credits. The methodology overview precedes Palestine, Iran, Ukraine, Sudan, UN Reform and Next Secretary-General; existing scene IDs stay unchanged. Palestine spans two cards and Ukraine spans three, with one paragraph and the full legend on each card; only the first card has a visible heading. Cards for the same topic share `data-step` and use `data-part` for their sequence number, keeping the map layer and location steady.
+- `index.html`: headline, introduction, eleven narrative cards and a final map-only scroll, Conclusion and credits. The methodology overview precedes Palestine, Iran, Ukraine, Sudan, UN Reform and Next Secretary-General; existing scene IDs stay unchanged. Palestine and Ukraine each span three cards, with one paragraph and the full legend on each card; only the first card has a visible heading. Cards for the same topic share `data-step` and use `data-part` for their sequence number, allowing category reveals within a topic while keeping its location steady.
 - `styles.css`: responsive layout, sticky map stage, overlaid narrative cards, colour keys and closing-section typography. In portrait layouts the map is vertically centred in the viewport and the active topic's legend is fixed at the bottom, outside the cards. The dock allows for device safe areas, and card spacing accounts for its height. Landscape layouts retain the legends inside the cards; without JavaScript those inline legends remain available in every orientation.
-- `scroll.js`: selects the current narrative step in either scroll direction and emits `story:stepchange` on `[data-scrolly]`. It copies the active topic's legend into the portrait dock, preserving it across repeated cards and hiding it outside the pinned map section. It also handles resize, orientation changes, font loading and browser history restoration.
+- `scroll.js`: selects the current narrative step in either scroll direction and emits `story:stepchange` on `[data-scrolly]`. It copies the active topic's legend into the portrait dock, preserving it across repeated cards and hiding it outside the pinned map section. It also handles resize, orientation changes, font loading and browser history restoration. Scroll anchors and topic cards are cached, including when restoring directly to the final blank step. The background video loads only when a reform topic is visible, pauses outside the map section or in a hidden tab, and stays disabled with reduced motion.
 - `map.js`: one persistent Mapbox GL JS map, kept separate from the narrative controller. It loads near the scrolly, switches thematic layers, resizes to fit the world and handles the static fallback.
 - `map-config.js`: the supplied style, public browser token, scene-to-layer mapping and representative dot locations.
-- `media/maps/overview.png`: neutral fallback artwork extracted from the PDF. The other six map images remain available but are no longer rendered. `header-map.png`, `icg-black.png`, `un-background.png` and `assembly-speaker.jpg` also come from that PDF.
+- `media/`: `header-3.png` (hero and fallback), `icg-black.png` (logo), `general-assembly.jpg` (closing photograph), `united_nations_background.webm` (preferred deferred reform video), `united_nations_background.mp4` (video fallback), and `united_nations_poster.jpg` (static backdrop while loading or when motion is disabled). All retained media are used by the page.
 
 ## Mapbox GL
 
+The Mapbox information (attribution) panel includes the active topic's heading and caption from `captions` in `map-config.js`. It updates in either scroll direction, shares a caption across repeated cards for a topic, and preserves the panel's open state and Mapbox attribution links. Overview shows attribution only. Caption text is independent of the article and legends; edit those separately when counts change.
+
 Mapbox GL JS 3.32.0 is pinned in `index.html`. The map mounts in `#story-map` with style `mapbox://styles/daltonwb/cmuo7btjj002m01sd9kud69tz`. It uses Equal Earth projection and fits the entire world at every screen size. Native scroll and touch gestures continue to move the story; camera interaction is disabled. Mapbox attribution remains visible beside the map, clear of the text cards.
 
-The renderer listens on `[data-scrolly]` for `story:stepchange`; `event.detail` contains `{ id, theme, index, total }`. Each step gently crossfades to its thematic layer over 650 ms using [Mapbox paint transitions](https://docs.mapbox.com/style-spec/reference/transition/). Inactive layers have zero opacity; the overview fades all thematic layers out. Rapid scrolling retargets the fade, and reduced-motion preferences switch immediately, including when changed while the page is open. The legacy `speech_data` and empty `unga-2026-blank` layers stay hidden.
+The renderer listens on `[data-scrolly]` for `story:stepchange`; `event.detail` contains `{ id, part, theme, index, total }`. Each step gently crossfades to its thematic layer over 650 ms using [Mapbox paint transitions](https://docs.mapbox.com/style-spec/reference/transition/). Inactive layers have zero opacity; the overview fades all thematic layers out. Unchanged layer opacities are cached to avoid redundant map updates. Rapid scrolling retargets the fade, and reduced-motion preferences switch immediately, including when changed while the page is open. The legacy `speech_data` and empty `unga-2026-blank` layers stay hidden.
 
 | Step | Style layer |
 | --- | --- |
@@ -37,15 +39,21 @@ The renderer listens on `[data-scrolly]` for `story:stepchange`; `event.detail` 
 | UN Reform | `unga-2026-unreforms` |
 | Next SG | `unga-2026-secretarygeneral` |
 
-A custom [Mapbox GL marker](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker) marks the active step with a dark dot and an expanding, fading halo. Overview and Next SG use UN headquarters in New York; the conflict steps use representative locations in Palestine, the Strait of Hormuz, Ukraine and Sudan. Dots crossfade in and out over 650 ms at their respective locations, including when scrolling rapidly or reversing direction. UN Reform fades all dots out. Reduced-motion preferences switch dots immediately. Edit `locations` in `map-config.js` to adjust the coordinates or accessible location labels. The marker follows the map projection and resizing, updates in either scroll direction, and becomes a static dot for reduced-motion preferences.
+A custom [Mapbox GL marker](https://docs.mapbox.com/mapbox-gl-js/api/markers/#marker) marks the active step with a dark dot and an expanding, fading halo. Overview shows all five distinct topic locations at once: Palestine, the Strait of Hormuz, Ukraine, Sudan and UN headquarters in New York. UN Reform and Next SG share the headquarters dot; subsequent steps show only their own representative location. Dots collapse over 220 ms and expand over 430 ms at their respective locations, including when scrolling rapidly or reversing direction. Reduced-motion preferences switch dots immediately. Edit `locations` in `map-config.js` to adjust the coordinates or accessible location labels. The marker follows the map projection and resizing, updates in either scroll direction, and becomes a static dot for reduced-motion preferences.
 
 The renderer reads the published style's current tileset references and category colours, including Palestine, without a separate hard-coded Palestine palette. It accepts both versions of the Palestine category labels (including `Palestine or Gaza, with West Bank` and `Palestine or Gaza, without West Bank`) so cached style versions still colour the updated data. It locally corrects copied Ukraine no-data checks to use each topic's own field, and consistently renders `No data` and `Not recognised` in white for all six topics. This does not modify the hosted style. Inline colour keys in `styles.css` use the same authored palette; map fills retain the style's opacity. When changing the palette in Studio, update those keys to match.
 
 The public `pk.` token in `map-config.js` is reused from `unga-2025/config.js` for the same Mapbox account. If its URL restrictions change, allow localhost and `https://crisisgroup.github.io/unga-sg/` (and any custom domain). Keep secret tokens out of browser assets. The style and vector tiles load directly from Mapbox; GitHub Pages still needs no server or build step. See the [Mapbox GL JS API](https://docs.mapbox.com/mapbox-gl-js/api/map/) for map configuration.
 
-The body copy comes from `Post-UNGA Analysis 2026 - For Policy Review.docx`. Its opening paragraph appears in the introduction, and its methodology paragraph and footnote appear in the overview card. The six topic sections retain their paragraphs and hyperlinks, with the supplied category labels and counts used as map colour keys. Conclusion replaces Looking Ahead. Editorial comments and duplicate standalone caption summaries are not rendered. The author's current headline and subheadline are preserved and also used in the page metadata. Review the policy draft and credits before publication, replace the placeholder publication date, remove `noindex, nofollow` when ready, and add the final canonical URL and social metadata once the publication location is known.
+Publication copy remains a draft. Before publishing, review the article, captions and legend counts together, replace the placeholder date, remove `noindex, nofollow`, and add the final canonical URL and social metadata.
 
-Without JavaScript the overview map and all ten narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
+Without JavaScript the fallback artwork and all eleven narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
+
+## Scroll sequence
+
+Palestine’s first card shows the green categories; its second introduces the coral “Not mentioned” countries, retained on the third card. Ukraine’s first two cards show green categories; card two briefly pulses outlines around Mali and Niger, and card three adds coral countries. The extra layers are derived from the published style locally. Reduced motion uses steady outlines. Scrolling backward restores the earlier category visibility.
+
+Desktop conflict legends wrap entries side by side, with the third entry on a new row. UN topic legends are unchanged. After Next Secretary-General, a final viewport of scrolling holds its map without a narrative card or portrait legend dock; without JavaScript this spacer is hidden.
 
 ## GitHub Pages
 

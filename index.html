@@ -40,13 +40,14 @@
     <!-- One persistent Mapbox map, driven by the narrative steps. -->
     <section class="scrolly" aria-label="Peace and security issues at the General Assembly" data-scrolly>
       <figure class="scrolly__graphic" data-scene="overview" data-theme="conflict">
-        <video class="map-backdrop" autoplay muted loop playsinline poster="media/un-background.png" aria-hidden="true">
-          <source src="media/hr_united_nations.mp4" type="video/mp4" />
+        <video class="map-backdrop" muted loop playsinline preload="none" poster="media/united_nations_poster.jpg" aria-hidden="true">
+          <source data-src="media/united_nations_background.webm" type="video/webm" />
+          <source data-src="media/united_nations_background.mp4" type="video/mp4" />
         </video>
         <div class="map-stage">
           <div id="story-map" class="map-world map-live" aria-label="World map of General Assembly speeches" aria-describedby="map-description"></div>
           <div class="map-world" data-map-fallback>
-            <img src="media/maps/overview.png" alt="Reference overview of the world, shown while the map loads or when it is unavailable." width="1532" height="773" />
+            <img src="media/header-3.png" alt="Decorative world map artwork, shown while the interactive data map loads or when it is unavailable." width="1384" height="562" loading="lazy" />
           </div>
         </div>
         <p class="map-status" role="status" hidden>Map unavailable. Showing a reference overview.</p>
@@ -69,9 +70,19 @@
             </ul>
           </div>
         </article>
-        <article class="step" data-step="palestine" data-part="2" data-theme="conflict" aria-label="Palestine, continued (2 of 2)">
+        <article class="step" data-step="palestine" data-part="2" data-theme="conflict" aria-label="Palestine, continued (2 of 3)">
           <div class="step__copy">
-            <p>Despite remaining the most discussed geographic crisis at the UN – with over half of the membership speaking on the topic – there was a 35 per cent decrease in the number of references compared to 2025. This is illustrative of a wider trend at the UN of a <a href="https://www.crisisgroup.org/sbr/global/sb15-ten-challenges-un-2026-2027">declining focus on the Palestinian issue</a> since the adoption of the Security Council’s November 2025 resolution endorsing the Trump administration’s Gaza ceasefire plan and the creation of the Board of Peace. The crises in Gaza and the West Bank did not garner as much attention at the 2026 General Debate as they did in 2025, when a handful of Western countries made significant announcements on their recognition of Palestinian statehood on the back of a <a href="https://www.crisisgroup.org/sites/default/files/2025-09/UNGA-Insights-Monday-22-September-2025.pdf">joint French-Saudi-led Conference on the Two State Solution</a>. Member states and civil society organisations did convene multiple side events on the margins of High-Level Week – including a ministerial gathering of the Global Alliance for the Implementation of the Two-State Solution, to help keep the issue high on the diplomatic radar.</p>
+            <p>Despite remaining the most discussed geographic crisis at the UN – with over half of the membership speaking on the topic – there was a 35 per cent decrease in the number of references compared to 2025. This is illustrative of a wider trend at the UN of a <a href="https://www.crisisgroup.org/sbr/global/sb15-ten-challenges-un-2026-2027">declining focus on the Palestinian issue</a> since the adoption of the Security Council’s November 2025 resolution endorsing the Trump administration’s Gaza ceasefire plan and the creation of the Board of Peace.</p>
+            <ul class="step__legend" aria-label="Map colour key">
+              <li><span class="key key--both">Referred to Gaza or Palestine, and the West Bank (37)</span></li>
+              <li><span class="key key--partial">Referred to Gaza or Palestine only (61)</span></li>
+              <li><span class="key key--none">Did not refer to Gaza or Palestine (94)</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="step" data-step="palestine" data-part="3" data-theme="conflict" aria-label="Palestine, continued (3 of 3)">
+          <div class="step__copy">
+            <p>The crises in Gaza and the West Bank did not garner as much attention at the 2026 General Debate as they did in 2025, when a handful of Western countries made significant announcements on their recognition of Palestinian statehood on the back of a <a href="https://www.crisisgroup.org/sites/default/files/2025-09/UNGA-Insights-Monday-22-September-2025.pdf">joint French-Saudi-led Conference on the Two State Solution</a>. Member states and civil society organisations did convene multiple side events on the margins of High-Level Week – including a ministerial gathering of the Global Alliance for the Implementation of the Two-State Solution, to help keep the issue high on the diplomatic radar.</p>
             <ul class="step__legend" aria-label="Map colour key">
               <li><span class="key key--both">Referred to Gaza or Palestine, and the West Bank (37)</span></li>
               <li><span class="key key--partial">Referred to Gaza or Palestine only (61)</span></li>
@@ -154,6 +165,7 @@
             </ul>
           </div>
         </article>
+        <div class="step step--blank" data-step="next-sg" data-part="2" data-theme="reform" data-blank="true" aria-label="Next Secretary-General map overview"></div>
       </div>
     </section>
 

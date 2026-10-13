@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --paper: #f2f2f2;
   --ink: #000;
   --muted: #555;
@@ -30,7 +30,6 @@ p { margin: 0; font-size: 22px; line-height: 1.6; }
 .hero__image::after { content: ""; position: absolute; inset: auto 0 0; height: 25%; background: linear-gradient(to bottom, transparent, var(--paper)); pointer-events: none; }
 .hero__brand { position: absolute; top: clamp(16px, 3vw, 32px); left: clamp(16px, 3vw, 32px); width: clamp(72px, 16%, 140px); }
 .hero__copy { width: min(68.75rem, calc(100% - 2 * var(--gutter))); margin: auto; padding-top: clamp(1.5rem, 4svh, 3rem); font-size: clamp(18px, 2.313vw, 24px); text-align: center; }
-/* Match minerals' main headline, including its 760px text column. */
 h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(--font-sans-cond); font-weight: 600; font-style: normal; font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: .96; letter-spacing: 0; text-align: center; text-transform: none; }
 .hero__subhed { margin: 2.667em auto 1.333em; max-width: 36.667em; font-size: 1em; font-style: italic; line-height: 1.6em; }
 .hero__byline, .hero__dateline { font-family: var(--font-sans-cond); font-size: 1em; line-height: 1.333; }
@@ -49,6 +48,11 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .map-world img { width: 100%; height: 100%; object-fit: contain; }
 .map-live { visibility: hidden; }
 .map-world.mapboxgl-map { font-family: var(--font-sans); }
+.story-attribution .story-attribution__caption { display: none; }
+.story-attribution.mapboxgl-compact-show { max-width: min(360px, calc(100vw - 40px)); max-height: 100%; }
+.story-attribution.mapboxgl-compact-show .story-attribution__caption { display: block; max-height: 24vh; overflow-y: auto; padding: 8px 0; margin-bottom: 4px; border-bottom: 1px solid #ddd; text-align: left; color: var(--ink); }
+.story-attribution__caption h3 { margin: 0 0 6px; font: 700 14px/1.35 var(--font-sans); }
+.story-attribution__caption p { font: 400 13px/1.5 var(--font-sans); }
 /* Scale the inner dot: Mapbox owns the marker wrapper's positioning transform. */
 .map-location-marker { width: 12px; height: 12px; pointer-events: none; }
 
@@ -86,9 +90,6 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   100% { transform: scale(2.2); opacity: 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .map-location-dot.is-visible::before { animation: none; opacity: 0; }
-}
 .map-status { position: absolute; right: 3%; bottom: 12px; max-width: 90%; padding: 6px 10px; background: #fff; color: #555; font: 14px/1.4 var(--font-sans); }
 /* Dim the footage against a solid black background to keep the map and copy prominent. */
 .map-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; filter: saturate(.45) contrast(.85); opacity: 0; transition: opacity 450ms; }
@@ -99,8 +100,6 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .step__copy h2 { margin: 0; font-size: 16.5px; line-height: 25px; letter-spacing: .08em; text-transform: uppercase; }
 .step__copy p { font-size: 16.5px; line-height: 1.6; }
 .step__legend { display: grid; gap: .65em; margin: 1.5em 0 0; padding: 0; list-style: none; font-size: 14px; line-height: 1.6; }
-.methodology-note { margin-top: 1em; padding-top: 1em; border-top: 1px solid #ddd; scroll-margin-top: 2rem; }
-.step__copy .methodology-note p { font-size: 14px; line-height: 1.5; color: var(--muted); }
 .step__copy strong, .key { font-family: var(--font-sans); font-weight: 700; }
 .key { padding: 1px 4px; background: var(--key-color); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .key--both { --key-color: #0f6e6a; color: #fff; }
@@ -111,12 +110,19 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 :is(.step, .map-legend-dock)[data-theme="reform"] .key--partial { --key-color: #6fa8dc; }
 :is(.step, .map-legend-dock)[data-theme="reform"] .key--none { --key-color: #919191; color: #000; }
 .map-legend-dock { display: none; }
+.step--blank { display: none; }
+@media (min-width: 1000px) and (orientation: landscape) {
+  .step[data-theme="conflict"] .step__legend { display: flex; flex-wrap: wrap; gap: .65em 12px; font-size: 13px; }
+  .step[data-theme="conflict"] .step__legend .key { font-family: var(--font-sans-cond); }
+  .step[data-theme="conflict"] .step__legend li:nth-child(3) { flex-basis: 100%; }
+}
 
 /* Left-hand cards scroll over the right-aligned sticky map. */
 .is-enhanced .scrolly__graphic { position: sticky; top: 0; height: 100svh; }
 .is-enhanced .scrolly__steps { margin-top: -100svh; z-index: 1; pointer-events: none; }
 .is-enhanced .step { display: flex; align-items: center; min-height: 100svh; padding: 80px 0 80px 6.1%; }
 .is-enhanced .step__copy { width: min(558px, 44%); margin: 0 auto 0 0; pointer-events: auto; }
+.is-enhanced .step.step--blank { min-height: 100svh; padding: 0; }
 
 /* White closing section with the photograph and its supplied draft caption. */
 .closing { background: #fff; padding: 116px var(--gutter) 0; }
@@ -160,7 +166,6 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   .scrolly { margin-top: 56px; }
   .scrolly__graphic { height: 60vw; }
   .map-world { right: 0; width: 100%; }
-  .is-enhanced .map-world { top: 50%; }
   .is-enhanced .step { min-height: 120svh; align-items: flex-start; padding: 48svh var(--gutter) 20svh; }
   .is-enhanced .step__copy { width: min(480px, 100%); margin: 0 auto; padding: 24px; }
   .step__copy { padding: 24px; }
@@ -174,7 +179,7 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 @media (orientation: portrait) {
   .is-enhanced .scrolly__graphic { height: 100dvh; }
   .is-enhanced .scrolly__steps { margin-top: -100dvh; }
-  .is-enhanced .map-world { top: 50%; right: 0; width: 100%; }
+  .is-enhanced .map-world { right: 0; width: 100%; }
   .is-enhanced .step { min-height: 120svh; align-items: flex-start; padding: 72svh var(--gutter) max(28svh, calc(var(--map-legend-height, 180px) + 32px)); }
   .is-enhanced .step__copy { width: min(480px, 100%); margin: 0 auto; padding: 24px; }
   .is-enhanced .step__copy .step__legend { display: none; }
@@ -191,6 +196,7 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
   h1 { max-width: 24ch; font-size: clamp(2rem, 8svh, 3rem); line-height: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .map-location-dot.is-visible::before { animation: none; opacity: 0; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
 }
