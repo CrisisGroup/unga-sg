@@ -19,7 +19,7 @@ Visit `http://127.0.0.1:8030/`. To test the GitHub Pages subpath, run the server
 - `scroll.js`: selects the current narrative step in either scroll direction and emits `story:stepchange` on `[data-scrolly]`. It copies the active topic's legend into the portrait dock, preserving it across repeated cards and hiding it outside the pinned map section. It also handles resize, orientation changes, font loading and browser history restoration. Scroll anchors and topic cards are cached, including when restoring directly to the final blank step. The background video loads only when a reform topic is visible, pauses outside the map section or in a hidden tab, and stays disabled with reduced motion.
 - `map.js`: one persistent Mapbox GL JS map, kept separate from the narrative controller. It loads near the scrolly, switches thematic layers, resizes to fit the world and handles the static fallback.
 - `map-config.js`: the supplied style, public browser token, scene-to-layer mapping, representative dot locations and `countryPoints` GeoJSON for small countries.
-- `media/`: `header-3.png` (hero and fallback), `icg-black.png` (logo), `general-assembly.jpg` (closing photograph), `united_nations_background.webm` (preferred deferred reform video), `united_nations_background.mp4` (video fallback), and `united_nations_poster.jpg` (static backdrop while loading or when motion is disabled). All retained media are used by the page.
+- `media/`: `header-3.png` (hero and fallback), `icg-black.png` (logo), `general-assembly.jpg` (closing photograph), `unga-2026-*.jpg` (social and search thumbnails), `united_nations_background.webm` (preferred deferred reform video), `united_nations_background.mp4` (video fallback), and `united_nations_poster.jpg` (static backdrop while loading or when motion is disabled). All retained media are used by the page or its preview metadata.
 
 ## Mapbox GL
 
@@ -43,11 +43,11 @@ A custom [Mapbox GL marker](https://docs.mapbox.com/mapbox-gl-js/api/markers/#ma
 
 The renderer reads the published style's current tileset references and category colours, including Palestine, without a separate hard-coded Palestine palette. It accepts both versions of the Palestine category labels (including `Palestine or Gaza, with West Bank` and `Palestine or Gaza, without West Bank`) so cached style versions still colour the updated data. It locally corrects copied Ukraine no-data checks to use each topic's own field, and consistently renders `No data` and `Not recognised` in white for all six topics. This does not modify the hosted style. Inline colour keys in `styles.css` use the same authored palette; map fills retain the style's opacity. When changing the palette in Studio, update those keys to match.
 
-Vatican City is represented by a small circle at `[12.4533, 41.90225]` ([GeoNames location](https://www.geonames.org/3164670/vatican-city.html)). Its feature in `countryPoints` uses the same fields as the tileset, with the supplied categories: Gaza/Palestine and the West Bank; no Iran/Hormuz reference; Ukraine only; Sudan mentioned; UN80 only; and no next Secretary-General reference. Point layers inherit the country layers' colour expressions, filters, opacity and transitions, including staged non-mention reveals. They are hidden in the neutral overview. Editing these point features does not change the hosted tileset or the article's aggregate counts.
+Vatican City is represented by a small circle at `[12.4533, 41.90225]` ([GeoNames location](https://www.geonames.org/3164670/vatican-city.html)). Its radius is 4px with a 1px outline on desktop, reduced to 2.5px with a 0.65px outline at viewport widths up to 700px or in landscape viewports up to 500px tall. It updates on resize and rotation. Its feature in `countryPoints` uses the same fields as the tileset, with the supplied categories: Gaza/Palestine and the West Bank; no Iran/Hormuz reference; Ukraine only; Sudan mentioned; UN80 only; and no next Secretary-General reference. Point layers inherit the country layers' colour expressions, filters, opacity and transitions, including staged non-mention reveals. They are hidden in the neutral overview. Editing these point features does not change the hosted tileset or the article's aggregate counts.
 
 The public `pk.` token in `map-config.js` is reused from `unga-2025/config.js` for the same Mapbox account. If its URL restrictions change, allow localhost and `https://crisisgroup.github.io/unga-sg/` (and any custom domain). Keep secret tokens out of browser assets. The style and vector tiles load directly from Mapbox; GitHub Pages still needs no server or build step. See the [Mapbox GL JS API](https://docs.mapbox.com/mapbox-gl-js/api/map/) for map configuration.
 
-Publication copy remains a draft. Before publishing, review the article, captions and legend counts together, replace the placeholder date, remove `noindex, nofollow`, and add the final canonical URL and social metadata.
+Before publishing, review the article, captions and legend counts together and replace the placeholder publication date. Search indexing is enabled; canonical and preview metadata use the GitHub Pages URL documented below.
 
 Without JavaScript the fallback artwork and all eleven narrative cards remain visible in normal document flow. Reduced-motion preferences disable transitions and smooth scrolling.
 
@@ -56,6 +56,25 @@ Without JavaScript the fallback artwork and all eleven narrative cards remain vi
 Palestine’s first card shows the green categories; its second introduces the coral “Not mentioned” countries, retained on the third card. Ukraine’s first two cards show green categories; card two briefly pulses outlines around Mali and Niger, and card three adds coral countries. The extra layers are derived from the published style locally. Reduced motion uses steady outlines. Scrolling backward restores the earlier category visibility.
 
 Desktop conflict legends wrap entries side by side, with the third entry on a new row. UN topic legends are unchanged. After Next Secretary-General, a final viewport of scrolling holds its map without a narrative card or portrait legend dock; without JavaScript this spacer is hidden.
+
+## Social and search thumbnails
+
+`index.html` includes static Open Graph metadata for social link previews, an X/Twitter large-image card, and Article JSON-LD with search image variants. These work without JavaScript. The title matches the visible headline, and the robots meta tag enables indexing and `max-image-preview:large`.
+
+The short preview description is shared by `description`, `og:description`, `twitter:description` and the Article JSON-LD `description`. Update all four together when changing the social copy. The visible subheading is edited separately.
+
+The supplied `thumbnail (2).png` (1280 × 800; 496,213 bytes) was exported as JPEG at quality 85, with centred crops, no upscaling and no source metadata. The source file is unchanged.
+
+| Asset in `media/` | Dimensions | Size | Use |
+| --- | --- | --- | --- |
+| `unga-2026-social.jpg` | 1200 × 630 | 77,277 bytes | Open Graph, X/Twitter and legacy image preview link |
+| `unga-2026-search-16x9.jpg` | 1280 × 720 | 91,261 bytes | Landscape search/Discover image |
+| `unga-2026-search-4x3.jpg` | 1064 × 798 | 85,753 bytes | 4:3 search image |
+| `unga-2026-search-1x1.jpg` | 800 × 800 | 67,402 bytes | Square search image |
+
+The search variants follow [Google's Article image recommendations](https://developers.google.com/search/docs/appearance/structured-data/article), and the wide variant supports [large Discover previews](https://developers.google.com/search/docs/appearance/google-discover). Platforms choose their final crop and may cache an earlier preview.
+
+Crawler-facing URLs are absolute HTTPS URLs under `https://crisisgroup.github.io/unga-sg/`. If the public domain or repository path changes, update the canonical link, `image_src`, Open Graph, Twitter image and JSON-LD URLs together; runtime assets remain relative. Deploy the HTML and all four images together, then check the public image URLs return JPEGs and refresh cached previews with the relevant platform's sharing debugger. A publication date is intentionally omitted from JSON-LD until the visible placeholder date has been replaced.
 
 ## GitHub Pages
 

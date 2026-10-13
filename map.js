@@ -16,6 +16,7 @@
     }
   });
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const smallViewport = window.matchMedia('(max-width: 700px), (max-height: 500px) and (orientation: landscape)');
   const stepTransitionDuration = 650;
   const layerOpacities = new Map();
   const stagedLayers = new Map();
@@ -60,6 +61,22 @@
     appliedOpacities.set(id, { opacity, duration });
   }
 
+  function countryPointSize() {
+    return {
+      'circle-radius': smallViewport.matches ? 2.5 : 4,
+      'circle-stroke-width': smallViewport.matches ? 0.65 : 1
+    };
+  }
+
+  function resizeCountryPoints() {
+    if (!map) return;
+    const size = countryPointSize();
+    countryPointLayers.forEach(id => {
+      if (!map.getLayer(id)) return;
+      Object.entries(size).forEach(([property, value]) => map.setPaintProperty(id, property, value));
+    });
+  }
+
   function addCountryPoints() {
     if (!config.countryPoints?.features.length) return;
     const source = 'story-country-points';
@@ -75,11 +92,10 @@
         source,
         ...(filter ? { filter } : {}),
         paint: {
-          'circle-radius': 4,
+          ...countryPointSize(),
           'circle-color': map.getPaintProperty(id, 'fill-color'),
           'circle-opacity': 0,
           'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 1,
           'circle-stroke-opacity': 0
         }
       });
@@ -403,6 +419,7 @@
 
   section.addEventListener('story:stepchange', event => selectScene(event.detail));
   reducedMotion.addEventListener('change', applyScene);
+  smallViewport.addEventListener('change', resizeCountryPoints);
   selectScene(scene);
   // Defer map requests until the reader approaches the scrolly.
   if ('IntersectionObserver' in window) {
