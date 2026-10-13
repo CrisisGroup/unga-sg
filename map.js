@@ -19,6 +19,7 @@
   const stepTransitionDuration = 650;
   const layerOpacities = new Map();
   const stagedLayers = new Map();
+  const countryPointLayers = new Map();
   const appliedOpacities = new Map();
   const emphasisLayer = 'story-mali-niger';
   let emphasisTimer;
@@ -49,7 +50,41 @@
     if (previous?.opacity === opacity && previous.duration === duration) return;
     map.setPaintProperty(id, 'fill-opacity-transition', { duration, delay: 0 });
     map.setPaintProperty(id, 'fill-opacity', opacity);
+    const pointId = countryPointLayers.get(id);
+    if (pointId) {
+      ['circle-opacity', 'circle-stroke-opacity'].forEach(property => {
+        map.setPaintProperty(pointId, `${property}-transition`, { duration, delay: 0 });
+        map.setPaintProperty(pointId, property, opacity);
+      });
+    }
     appliedOpacities.set(id, { opacity, duration });
+  }
+
+  function addCountryPoints() {
+    if (!config.countryPoints?.features.length) return;
+    const source = 'story-country-points';
+    map.addSource(source, { type: 'geojson', data: config.countryPoints });
+    // Share the country fills' exact colour expressions and filters, including
+    // the later reveal of non-mentions in Palestine and Ukraine.
+    [...layerOpacities.keys(), ...stagedLayers.keys()].forEach(id => {
+      const pointId = `${id}-points`;
+      const filter = map.getFilter(id);
+      map.addLayer({
+        id: pointId,
+        type: 'circle',
+        source,
+        ...(filter ? { filter } : {}),
+        paint: {
+          'circle-radius': 4,
+          'circle-color': map.getPaintProperty(id, 'fill-color'),
+          'circle-opacity': 0,
+          'circle-stroke-color': '#ffffff',
+          'circle-stroke-width': 1,
+          'circle-stroke-opacity': 0
+        }
+      });
+      countryPointLayers.set(id, pointId);
+    });
   }
 
   function applyScene() {
@@ -174,6 +209,10 @@
       description.textContent += ' Only countries that referred to this topic are coloured.';
     }
     if (next.id === 'ukraine' && next.part === 2) description.textContent += ' Mali and Niger are highlighted.';
+    if (config.layers[next.id] && config.countryPoints?.features.length) {
+      const names = config.countryPoints.features.map(feature => feature.properties.country);
+      description.textContent += ` Small coloured points represent ${names.join(', ')} using the same colour key.`;
+    }
     applyScene();
   }
 
@@ -285,6 +324,7 @@
         map.setProjection(config.projection);
         layerOpacities.clear();
         stagedLayers.clear();
+        countryPointLayers.clear();
         appliedOpacities.clear();
         clearTimeout(emphasisTimer);
         emphasisActive = false;
@@ -343,6 +383,7 @@
           filter: ['match', ['get', 'iso3'], ['MLI', 'NER'], true, false],
           paint: { 'line-color': '#172c2b', 'line-width': 1.5, 'line-opacity': 0 }
         });
+        addCountryPoints();
         applyScene();
         fitWorld();
       });

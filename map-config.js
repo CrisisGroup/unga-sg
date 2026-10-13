@@ -3,6 +3,25 @@ window.UNGA_MAP_CONFIG = {
   "accessToken": "pk.eyJ1IjoiZGFsdG9ud2IiLCJhIjoiOWdSSXFQSSJ9.HZyjh4g3TAAOAncwelv9Vw",
   "style": "mapbox://styles/daltonwb/cmuo7btjj002m01sd9kud69tz",
   "projection": "equalEarth",
+  // Small countries represented as points, using the thematic tileset's fields.
+  "countryPoints": {
+    "type": "FeatureCollection",
+    "features": [{
+      "type": "Feature",
+      "id": "VAT",
+      "geometry": { "type": "Point", "coordinates": [12.4533, 41.90225] },
+      "properties": {
+        "iso3": "VAT",
+        "country": "Vatican City",
+        "palestine": "Palestine or Gaza, with West Bank",
+        "iran_hormuz": "Not mentioned",
+        "ukraine": "Ukraine without Russia",
+        "sudan": "Mentioned",
+        "un_reform": "UN80",
+        "next_secretary_general": "Not mentioned"
+      }
+    }]
+  },
   // Captions shown in the attribution panel for the active scroll topic.
   "captions": {
     "palestine": {
