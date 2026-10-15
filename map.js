@@ -82,7 +82,7 @@
     const source = 'story-country-points';
     map.addSource(source, { type: 'geojson', data: config.countryPoints });
     // Share the country fills' exact colour expressions and filters, including
-    // the later reveal of non-mentions in Palestine and Ukraine.
+    // the per-card visibility of non-mentions in Palestine and Ukraine.
     [...layerOpacities.keys(), ...stagedLayers.keys()].forEach(id => {
       const pointId = `${id}-points`;
       const filter = map.getFilter(id);
@@ -103,9 +103,14 @@
     });
   }
 
+  function sceneLayer() {
+    // The final Ukraine card keeps the basemap and location dot, without data.
+    return scene.id === 'ukraine' && scene.part === 3 ? null : config.layers[scene.id];
+  }
+
   function applyScene() {
     if (!map || !styleReady) return;
-    const selected = config.layers[scene.id];
+    const selected = sceneLayer();
     if (selected && !map.getLayer(selected)) {
       showFallback();
       return;
@@ -117,8 +122,8 @@
       setLayerOpacity(id, id === selected ? opacity : 0, duration);
     });
     stagedLayers.forEach(({ topic, opacity }, id) => {
-      const revealAt = topic === 'palestine' ? 2 : 3;
-      const visible = scene.id === topic && (scene.part || 1) >= revealAt;
+      const part = scene.part || 1;
+      const visible = scene.id === topic && (topic === 'palestine' ? part >= 2 : part === 1);
       setLayerOpacity(id, visible ? opacity : 0, duration);
     });
     updateEmphasis();
@@ -215,17 +220,18 @@
     figure.dataset.scene = next.id;
     figure.dataset.theme = next.theme;
     const title = topicTitles.get(next.id) || 'Overview';
-    description.textContent = `${title}: world map of General Assembly speeches. ${next.id === 'overview' ? 'Scroll through the topics to explore the data.' : 'The map colour key explains the country colours.'}`;
+    const hasData = Boolean(sceneLayer());
+    description.textContent = `${title}: world map of General Assembly speeches. ${next.id === 'overview' ? 'Scroll through the topics to explore the data.' : hasData ? 'The map colour key explains the country colours.' : 'Country data colours are hidden.'}`;
     const labels = [...sceneLocations().values()].map(location => location.label);
     if (labels.length) description.textContent += labels.length === 1
       ? ` A dot marks ${labels[0]}.`
       : ` Dots mark ${labels.join('; ')}.`;
     if ((next.id === 'palestine' && (next.part || 1) < 2) ||
-        (next.id === 'ukraine' && (next.part || 1) < 3)) {
+        (next.id === 'ukraine' && next.part === 2)) {
       description.textContent += ' Only countries that referred to this topic are coloured.';
     }
     if (next.id === 'ukraine' && next.part === 2) description.textContent += ' Mali and Niger are highlighted.';
-    if (config.layers[next.id] && config.countryPoints?.features.length) {
+    if (hasData && config.countryPoints?.features.length) {
       const names = config.countryPoints.features.map(feature => feature.properties.country);
       description.textContent += ` Small coloured points represent ${names.join(', ')} using the same colour key.`;
     }
@@ -252,7 +258,7 @@
 
   function revealMap() {
     if (ready || !map || accessFailed || !map.isStyleLoaded() || !map.areTilesLoaded()) return;
-    const selected = config.layers[scene.id];
+    const selected = sceneLayer();
     if (selected && !map.getLayer(selected)) return;
     ready = true;
     clearTimeout(timeout);

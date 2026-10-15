@@ -26,7 +26,8 @@
     if (legendStep !== step) {
       legendStep = step;
       const topic = topics.get(step.dataset.step);
-      const legend = step.querySelector('.step__legend') || topic.querySelector('.step__legend');
+      const legend = step.hasAttribute('data-hide-legend') ? null
+        : step.querySelector('.step__legend') || topic.querySelector('.step__legend');
       legendDock.replaceChildren();
       if (legend) {
         const title = document.createElement('div');
