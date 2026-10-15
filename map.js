@@ -360,8 +360,8 @@
         ['speech_data', 'unga-2026-blank'].forEach(id => {
           if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', 'none');
         });
-        // Use the current Studio palette and tileset references, with consistent
-        // no-data handling based on each topic's own field.
+        // Use the current Studio palette and tileset references, with the two
+        // approved UN reform tints and no-data handling for each topic's field.
         const topicFields = {
           palestine: 'palestine',
           'iran-hormuz': 'iran_hormuz',
@@ -373,11 +373,19 @@
         Object.entries(topicFields).forEach(([step, field]) => {
           const id = config.layers[step];
           if (!map.getLayer(id)) return;
-          const colour = map.getPaintProperty(id, 'fill-color');
+          let colour = updateCategoryChecks(map.getPaintProperty(id, 'fill-color'), field);
+          if (field === 'un_reform') {
+            colour = [
+              'match', ['get', field],
+              'Security Council reform', '#A9C8EC',
+              'UN80', '#009EDB',
+              colour
+            ];
+          }
           map.setPaintProperty(id, 'fill-color', [
             'match', ['get', field],
             ['No data', 'Not recognised'], '#ffffff',
-            updateCategoryChecks(colour, field)
+            colour
           ]);
         });
         // Split the non-mention category into its own layer so it can fade in

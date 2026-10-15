@@ -109,7 +109,8 @@ h1 { width: min(760px, 100%); max-width: 34ch; margin: 0 auto; font-family: var(
 .key--none { --key-color: #c9573c; color: #fff; }
 .step[data-theme="reform"] .step__copy { border-color: #7baaf4; }
 :is(.step, .map-legend-dock)[data-theme="reform"] .key--both { --key-color: #1f4e8c; }
-:is(.step, .map-legend-dock)[data-theme="reform"] .key--partial { --key-color: #6fa8dc; }
+:is(.step, .map-legend-dock)[data-theme="reform"] .key--un80 { --key-color: #009EDB; }
+:is(.step, .map-legend-dock)[data-theme="reform"] .key--council { --key-color: #A9C8EC; }
 /* Match the map's #999999 fill at 80% opacity (about #adadad over white). */
 :is(.step, .map-legend-dock)[data-theme="reform"] .key--none { --key-color: rgb(153 153 153 / 80%); color: #000; }
 .map-legend-dock { display: none; }
