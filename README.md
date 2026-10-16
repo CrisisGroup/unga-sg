@@ -19,7 +19,7 @@ Visit `http://127.0.0.1:8030/`. To test the GitHub Pages subpath, run the server
 - `scroll.js`: selects the current narrative step in either scroll direction and emits `story:stepchange` on `[data-scrolly]`. It copies the active topic's legend into the portrait dock, preserving it across repeated cards and hiding it outside the pinned map section. It also handles resize, orientation changes, font loading and browser history restoration. Scroll anchors and topic cards are cached, including when restoring directly to the final blank step. The background video loads only when a reform topic is visible, pauses outside the map section or in a hidden tab, and stays disabled with reduced motion.
 - `map.fd10504ec5.js`: one persistent Mapbox GL JS map, kept separate from the narrative controller. It loads near the scrolly, switches thematic layers, resizes to fit the world and handles the static fallback.
 - `map-config.17bd39225c.js`: the supplied style, public browser token, scene-to-layer mapping, representative dot locations and `countryPoints` GeoJSON for small countries.
-- `media/`: `header-final.webp` (hero, optimized from the supplied PNG at its original 1384 × 562 resolution), `header-3.png` (map fallback), `icg-black.png` (logo), `general-assembly.jpg` (closing photograph), `unga-2026-*.jpg` (social and search thumbnails), `united_nations_background.webm` (preferred deferred reform video), `united_nations_background.mp4` (video fallback), and `united_nations_poster.jpg` (static backdrop while loading or when motion is disabled). All retained media are used by the page or its preview metadata.
+- `media/`: `header-final.webp` (hero, optimized from the supplied PNG at its original 1384 × 562 resolution), `header-3.png` (map fallback), `icg-black.png` (logo), `general-assembly.jpg` (closing photograph), `unga-2026-*.jpg` (social and search thumbnails), `united_nations_background.webm` (preferred deferred reform video), `united_nations_background.mp4` (video fallback), and `united_nations_poster.jpg` (static backdrop while loading or when motion is disabled). Earlier header and thumbnail filenames are retained for cached pages.
 
 ## Mapbox GL
 
@@ -73,16 +73,16 @@ The supplied `thumbnail (2).png` (1280 × 800; 496,213 bytes) was exported as JP
 
 | Asset in `media/` | Dimensions | Size | Use |
 | --- | --- | --- | --- |
-| `unga-2026-social.jpg` | 1200 × 630 | 77,277 bytes | Open Graph, X/Twitter and legacy image preview link |
-| `unga-2026-search-16x9.jpg` | 1280 × 720 | 91,261 bytes | Landscape search/Discover image |
-| `unga-2026-search-4x3.jpg` | 1064 × 798 | 85,753 bytes | 4:3 search image |
-| `unga-2026-search-1x1.jpg` | 800 × 800 | 67,402 bytes | Square search image |
+| `unga-2026-social.16d3288a8a.jpg` | 1200 × 630 | 64,626 bytes | Open Graph, X/Twitter and legacy image preview link |
+| `unga-2026-search-16x9.c22e6c565f.jpg` | 1280 × 720 | 72,887 bytes | Landscape search/Discover image |
+| `unga-2026-search-4x3.0e97c2ccc9.jpg` | 1064 × 798 | 66,243 bytes | 4:3 search image |
+| `unga-2026-search-1x1.1388fd8397.jpg` | 800 × 800 | 50,478 bytes | Square search image |
 
 The search variants follow [Google's Article image recommendations](https://developers.google.com/search/docs/appearance/structured-data/article), and the wide variant supports [large Discover previews](https://developers.google.com/search/docs/appearance/google-discover). Platforms choose their final crop and may cache an earlier preview.
 
 The canonical production URL is `https://www.crisisgroup.org/visual-explainers/un-general-assembly-2026-speeches`. The canonical link, Open Graph page URL and JSON-LD article identifiers use this exact URL. The `image_src`, Open Graph, Twitter and JSON-LD image and logo URLs point into its `/media/` directory. These URLs are static in the HTML so crawlers can read them without JavaScript; runtime assets remain relative for local and GitHub Pages previews.
 
-Upload the HTML and all four preview images together via SFTP, then check the public image URLs return JPEGs and refresh cached previews with the relevant platform's sharing debugger. Production URL availability can only be verified after that upload.
+Upload the new hashed hero WebP and all four hashed preview JPEGs into `media/` first, then upload the updated `index.html`. Keep older image filenames available while cached HTML or social previews still reference them. After uploading, check the public image URLs and refresh cached previews with the relevant platform's sharing debugger. If the host caches `index.html`, that HTML must also refresh before the new image URLs take effect. Production URL availability can only be verified after the upload.
 
 ## Production deployment
 
