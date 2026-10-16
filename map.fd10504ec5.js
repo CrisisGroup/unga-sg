@@ -21,6 +21,9 @@
   const layerOpacities = new Map();
   const stagedLayers = new Map();
   const countryPointLayers = new Map();
+  const boundaryLayers = new Map();
+  const boundaryProperties = new Map();
+  let boundaryDataReady = false;
   const appliedOpacities = new Map();
   const emphasisLayer = 'story-mali-niger';
   let emphasisTimer;
@@ -49,8 +52,10 @@
   function setLayerOpacity(id, opacity, duration) {
     const previous = appliedOpacities.get(id);
     if (previous?.opacity === opacity && previous.duration === duration) return;
-    map.setPaintProperty(id, 'fill-opacity-transition', { duration, delay: 0 });
-    map.setPaintProperty(id, 'fill-opacity', opacity);
+    [id, boundaryLayers.get(id)?.id].filter(Boolean).forEach(layerId => {
+      map.setPaintProperty(layerId, 'fill-opacity-transition', { duration, delay: 0 });
+      map.setPaintProperty(layerId, 'fill-opacity', opacity);
+    });
     const pointId = countryPointLayers.get(id);
     if (pointId) {
       ['circle-opacity', 'circle-stroke-opacity'].forEach(property => {
@@ -101,6 +106,82 @@
       });
       countryPointLayers.set(id, pointId);
     });
+  }
+
+  function boundaryExpression(expression) {
+    if (!Array.isArray(expression) || expression[0] === 'literal') return expression;
+    if (expression[0] === 'get' && expression.length === 2) {
+      const field = expression[1];
+      const iso3 = ['get', 'iso_3166_1_alpha_3'];
+      if (field === 'iso3') return iso3;
+      // Rejoin the original speech fields to the corrected country polygons.
+      const records = [...boundaryProperties];
+      if (records.some(([, properties]) => Object.hasOwn(properties, field))) {
+        return ['match', iso3, ...records.flatMap(([country, properties]) =>
+          [country, properties[field] ?? 'No data']), 'No data'];
+      }
+    }
+    return expression.map(value => boundaryExpression(value));
+  }
+
+  function addBoundaryCorrections() {
+    const correction = config.boundaryCorrections;
+    boundaryDataReady = !correction?.countries.length;
+    if (boundaryDataReady) return;
+    const style = map.getStyle();
+    const sources = style.sources;
+    let source = Object.keys(sources).find(id => sources[id].url === correction.source);
+    if (!source) {
+      source = 'story-country-boundaries';
+      map.addSource(source, { type: 'vector', url: correction.source });
+    }
+    const countryFilter = ['match', ['get', 'iso_3166_1_alpha_3'], correction.countries, true, false];
+    const worldviewFilter = ['any',
+      ['==', ['get', 'worldview'], 'all'],
+      ['in', correction.worldview, ['get', 'worldview']]
+    ];
+    const correctedFilter = filter => ['all',
+      countryFilter, worldviewFilter, ['==', ['get', 'disputed'], 'false'],
+      ...(filter ? [filter] : [])
+    ];
+    [...layerOpacities.keys(), ...stagedLayers.keys()].forEach(parentId => {
+      const parent = style.layers.find(layer => layer.id === parentId);
+      const id = `${parentId}-boundaries`;
+      boundaryLayers.set(parentId, { id, colour: parent.paint['fill-color'], filter: parent.filter, correctedFilter });
+      map.addLayer({
+        id, type: 'fill', source, 'source-layer': correction.sourceLayer,
+        ...(parent.slot ? { slot: parent.slot } : {}),
+        filter: correctedFilter(parent.filter),
+        layout: { visibility: 'visible' },
+        paint: { ...parent.paint, 'fill-opacity': 0, 'fill-color-transition': { duration: 0, delay: 0 } }
+      }, parentId);
+      // Remove the old shapes, including their Crimea assignment, from every
+      // thematic category. Small-country point layers inherit this exclusion.
+      map.setFilter(parentId, ['all',
+        ...(parent.filter ? [parent.filter] : []),
+        ['match', ['get', 'iso3'], correction.countries, false, true]
+      ]);
+    });
+  }
+
+  function syncBoundaryData() {
+    if (boundaryDataReady || !styleReady) return;
+    const correction = config.boundaryCorrections;
+    const layer = map.getLayer(config.layers.ukraine);
+    if (!layer) return;
+    // Source features retain their data even though the old country shapes are
+    // filtered out of the display. Wait for both records before showing the map.
+    const features = map.querySourceFeatures(layer.source, { sourceLayer: layer['source-layer'] });
+    correction.countries.forEach(country => {
+      const feature = features.find(item => item.properties.iso3 === country);
+      if (feature) boundaryProperties.set(country, feature.properties);
+    });
+    if (boundaryProperties.size !== correction.countries.length) return;
+    boundaryLayers.forEach(({ id, colour, filter, correctedFilter }) => {
+      map.setPaintProperty(id, 'fill-color', boundaryExpression(colour));
+      map.setFilter(id, correctedFilter(boundaryExpression(filter)));
+    });
+    boundaryDataReady = true;
   }
 
   function sceneLayer() {
@@ -258,6 +339,7 @@
 
   function revealMap() {
     if (ready || !map || accessFailed || !map.isStyleLoaded() || !map.areTilesLoaded()) return;
+    if (!boundaryDataReady) return;
     const selected = sceneLayer();
     if (selected && !map.getLayer(selected)) return;
     ready = true;
@@ -320,6 +402,7 @@
         accessToken: config.accessToken,
         style: config.style,
         projection: config.projection,
+        worldview: config.boundaryCorrections?.worldview || 'US',
         center: [0, 0],
         zoom: 0,
         minZoom: -2,
@@ -354,6 +437,8 @@
         layerOpacities.clear();
         stagedLayers.clear();
         countryPointLayers.clear();
+        boundaryLayers.clear();
+        boundaryProperties.clear();
         appliedOpacities.clear();
         clearTimeout(emphasisTimer);
         emphasisActive = false;
@@ -420,11 +505,12 @@
           filter: ['match', ['get', 'iso3'], ['MLI', 'NER'], true, false],
           paint: { 'line-color': '#172c2b', 'line-width': 1.5, 'line-opacity': 0 }
         });
+        addBoundaryCorrections();
         addCountryPoints();
         applyScene();
         fitWorld();
       });
-      map.on('idle', revealMap);
+      map.on('idle', () => { syncBoundaryData(); revealMap(); });
       map.on('error', event => {
         if (event.error?.status === 401 || event.error?.status === 403) accessFailed = true;
         if (!ready || accessFailed) showFallback();

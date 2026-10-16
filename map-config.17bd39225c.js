@@ -3,6 +3,13 @@ window.UNGA_MAP_CONFIG = {
   "accessToken": "pk.eyJ1IjoiZGFsdG9ud2IiLCJhIjoiOWdSSXFQSSJ9.HZyjh4g3TAAOAncwelv9Vw",
   "style": "mapbox://styles/daltonwb/cmuo7btjj002m01sd9kud69tz",
   "projection": "equalEarth",
+  // Replace only these display geometries; speech categories come from our tiles.
+  "boundaryCorrections": {
+    "source": "mapbox://mapbox.country-boundaries-v1",
+    "sourceLayer": "country_boundaries",
+    "worldview": "US",
+    "countries": ["UKR", "RUS"]
+  },
   // Local data corrections by topic field and country ISO3 code.
   "categoryOverrides": {
     "ukraine": { "BFA": "Not mentioned" }
