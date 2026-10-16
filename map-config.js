@@ -3,6 +3,10 @@ window.UNGA_MAP_CONFIG = {
   "accessToken": "pk.eyJ1IjoiZGFsdG9ud2IiLCJhIjoiOWdSSXFQSSJ9.HZyjh4g3TAAOAncwelv9Vw",
   "style": "mapbox://styles/daltonwb/cmuo7btjj002m01sd9kud69tz",
   "projection": "equalEarth",
+  // Local data corrections by topic field and country ISO3 code.
+  "categoryOverrides": {
+    "ukraine": { "BFA": "Not mentioned" }
+  },
   // Small countries represented as points, using the thematic tileset's fields.
   "countryPoints": {
     "type": "FeatureCollection",

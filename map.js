@@ -269,8 +269,15 @@
     updateLocationMarkers();
   }
 
+  function categoryValue(field) {
+    const overrides = Object.entries(config.categoryOverrides?.[field] || {});
+    if (!overrides.length) return ['get', field];
+    return ['match', ['get', 'iso3'], ...overrides.flat(), ['get', field]];
+  }
+
   function updateCategoryChecks(expression, field) {
     if (!Array.isArray(expression)) return expression;
+    if (expression[0] === 'get' && expression[1] === field) return categoryValue(field);
     if (field === 'palestine' && expression[0] === 'match' &&
         expression[1]?.[0] === 'get' && expression[1][1] === field) {
       expression = [...expression];
@@ -294,7 +301,7 @@
     if (expression[0] === 'match' && expression[1]?.[0] === 'get' &&
         expression[1][1] === 'ukraine' && Array.isArray(expression[2]) &&
         expression[2].every(label => label === 'No data' || label === 'Not recognised')) {
-      return [expression[0], ['get', field], ...expression.slice(2)];
+      expression = [expression[0], ['get', field], ...expression.slice(2)];
     }
     return expression.map(value => updateCategoryChecks(value, field));
   }
@@ -383,7 +390,7 @@
             ];
           }
           map.setPaintProperty(id, 'fill-color', [
-            'match', ['get', field],
+            'match', categoryValue(field),
             ['No data', 'Not recognised'], '#ffffff',
             colour
           ]);
@@ -396,14 +403,14 @@
           const base = styleLayers.find(layer => layer.id === baseId);
           if (!base) return;
           const id = `${baseId}-not-mentioned`;
-          const originalFilter = base.filter;
+          const originalFilter = updateCategoryChecks(base.filter, topic);
           const withFilter = condition => originalFilter ? ['all', originalFilter, condition] : condition;
           map.addLayer({
             ...base, id,
-            filter: withFilter(['==', ['get', topic], 'Not mentioned']),
+            filter: withFilter(['==', categoryValue(topic), 'Not mentioned']),
             paint: { ...base.paint, 'fill-opacity': 0 }
           }, baseId);
-          map.setFilter(baseId, withFilter(['!=', ['get', topic], 'Not mentioned']));
+          map.setFilter(baseId, withFilter(['!=', categoryValue(topic), 'Not mentioned']));
           stagedLayers.set(id, { topic, opacity: layerOpacities.get(baseId) });
         });
         const ukraineLayer = styleLayers.find(layer => layer.id === config.layers.ukraine);
